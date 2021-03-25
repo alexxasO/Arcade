@@ -13,6 +13,7 @@
 
 #include "key.hpp"
 #include "define.hpp"
+#include "unistd.h"
 #include "Cell.hpp"
 
 class IDisplayModule {
@@ -25,7 +26,7 @@ class IDisplayModule {
 		
         // Poll event
 
-        virtual std::vector<keys_e> pollEvent() const = 0;
+        virtual std::vector<keys_e> pollEvent() = 0;
         
         // Refresh frame
 

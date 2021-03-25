@@ -20,7 +20,8 @@ class SDL_display_module : public IDisplayModule {
         void interpretCells(std::vector<cell_t> &cells) override;
         void createWindow(const std::string &name, int flags);
         void createRender(int flags);
-        std::vector<keys_e> pollEvent() const override;
+        void draw(int r, int g, int b, int a);
+        std::vector<keys_e> pollEvent() override;
         void refreshScreen() override;
     protected:
         std::vector<keys_e> _event;

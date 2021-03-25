@@ -29,14 +29,27 @@ void SDL_display_module::interpretCells(std::vector<cell_t> &cells)
 
 }
 
-std::vector<keys_e> SDL_display_module::pollEvent() const
+std::vector<keys_e> SDL_display_module::pollEvent()
 {
+    SDL_Event ev;
+
+    while (SDL_PollEvent(&ev)) {
+        switch (ev.type) {
+            case SDL_QUIT:
+                std::exit(0);
+            case SDLK_x:
+                _event.push_back(X);
+                break;
+            default:
+                return _event;
+        }
+    }
     return _event;
 }
 
 void SDL_display_module::refreshScreen()
 {
-
+    SDL_RenderPresent(_render);
 }
 
 void SDL_display_module::createWindow(const std::string &name, int flags)
@@ -56,4 +69,10 @@ void SDL_display_module::createRender(int flags)
         printf("Failed to create renderer: %s\n", SDL_GetError());
         exit(1);
     }
+}
+
+void SDL_display_module::draw(int r, int g, int b, int a)
+{
+    SDL_SetRenderDrawColor(_render, r, g, b, a);
+    SDL_RenderClear(_render);
 }
