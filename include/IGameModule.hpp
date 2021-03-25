@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2021
-** B-OOP-400-REN-4-1-arcade-arthur.jourdan
+** B-OOP-400-REN-4-1-arcade-killian.vallette
 ** File description:
 ** IGame
 */
@@ -16,18 +16,25 @@
 #include <vector>
 #include <string>
 
-#include "Cell.h"
+#include "key.hpp"
+#include "Cell.hpp"
 
 class IGameModule {
     public:
         virtual ~IGameModule() = 0;
 
-		virtual void update(std::vector<keys_e> &events) = 0;
+				/**
+				 * @brief Update events and make one tick of the game
+				 *
+				 * @param events The events to be interpreted by the game
+				 *                in order to update it 
+				 */
+				virtual void update(std::vector<keys_e> &events) = 0; 
         virtual void refreshBoard() = 0;
         virtual void reset() = 0;
-        virtual std::vector<cell_t> getBoard() = 0;
+        virtual const std::vector<cell_t> &getBoard() = 0;
 
-		virtual int getScore() = 0;
+				virtual int getScore() = 0;
 		protected:
     private:
 };
