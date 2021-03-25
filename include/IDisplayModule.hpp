@@ -12,11 +12,12 @@
 #include <string>
 
 #include "key.hpp"
+#include "define.hpp"
 #include "Cell.hpp"
 
 class IDisplayModule {
     public:
-        virtual ~IDisplayModule() = 0;
+        virtual ~IDisplayModule() = default;
 
 	    // Display board
 

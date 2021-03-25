@@ -1,0 +1,6 @@
+*.o
+vgcore*
+.vscode/
+.idea/
+.dist/
+arcade
