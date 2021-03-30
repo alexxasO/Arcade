@@ -16,7 +16,7 @@ int main()
         a.interpretCells(cell_vect);
         a.pollEvent();
         a.refreshScreen();
-        SDL_Delay(16);
+        usleep(16);
     }
     return 0;
 }
