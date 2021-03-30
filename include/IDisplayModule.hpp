@@ -15,6 +15,7 @@
 #include "define.hpp"
 #include "unistd.h"
 #include "Cell.hpp"
+#include <map>
 
 class IDisplayModule {
     public:

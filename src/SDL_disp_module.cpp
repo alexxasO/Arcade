@@ -7,6 +7,24 @@
 
 #include "SDL_disp_module.hpp"
 
+static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+{
+    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawLine(render, x.first, x.second, y.first, y.second);
+}
+
+static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+{
+    SDL_Rect rect;
+
+    rect.h = y.first;
+    rect.w = y.second;
+    rect.x = x.first;
+    rect.y = x.second;
+    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
+    SDL_RenderDrawRect(render, &rect);
+}
+
 SDL_display_module::SDL_display_module()
 {
     _win = nullptr;
@@ -15,6 +33,8 @@ SDL_display_module::SDL_display_module()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[debug] %s", SDL_GetError());
         exit(1);
     }
+    _form_map['r'] = &draw_rect;
+    _form_map['l'] = &draw_line;
 }
 
 SDL_display_module::~SDL_display_module()
@@ -24,9 +44,25 @@ SDL_display_module::~SDL_display_module()
     SDL_Quit();
 }
 
+void SDL_display_module::interpretSoloCell(const cell_t& cell)
+{
+    SDL_Color color;
+
+    if (cell.plainChar)
+        return;
+    color.a = GETALPHA(cell.bgColor);
+    color.r = GETRED(cell.bgColor);
+    color.g = GETGREEN(cell.bgColor);
+    color.b = GETBLUE(cell.bgColor);
+    _form_map[cell.c](cell.position, cell.offset, _render, color);
+
+}
+
 void SDL_display_module::interpretCells(std::vector<cell_t> &cells)
 {
-
+    for (auto & cell : cells) {
+        interpretSoloCell(cell);
+    }
 }
 
 std::vector<keys_e> SDL_display_module::pollEvent()
