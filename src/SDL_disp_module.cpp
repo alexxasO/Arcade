@@ -10,17 +10,17 @@
 static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(render, x.first, x.second, y.first, y.second);
+    SDL_RenderDrawLine(render, DELTA(x.first), DELTA(x.second), DELTA(y.first), DELTA(y.second));
 }
 
 static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
     SDL_Rect rect;
 
-    rect.h = y.first;
-    rect.w = y.second;
-    rect.x = x.first;
-    rect.y = x.second;
+    rect.h = DELTA(y.first);
+    rect.w = DELTA(y.second);
+    rect.x = DELTA(x.first);
+    rect.y = DELTA(x.second);
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     SDL_RenderDrawRect(render, &rect);
 }
