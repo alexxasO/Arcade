@@ -10,18 +10,33 @@
 
 #include <curses.h>
 #include <vector>
-#include "Cell.hpp"
+#include <map>
+#include "IDisplayModule.hpp"
 
-class Ncurses_disp_module {
+typedef struct color
+{
+    int r;
+    int g;
+    int b;
+    int a;
+} color_t;
+
+
+typedef void (*draw_func)(const cell_t &, const color_t &);
+
+class Ncurses_disp_module : public IDisplayModule {
     public:
         Ncurses_disp_module();
         ~Ncurses_disp_module();
 
-        void interpretCells(std::vector<cell_t> &cells);
-
+        void interpretCells(std::vector<cell_t> &cells) override;
+        void interpret_cell(const cell_t &cell);
+        virtual void refreshScreen() override;
+        virtual std::vector<keys_e> pollEvent() override;
 
     protected:
-        WINDOW *main_win;
+        WINDOW *_main_win;
+        std::map<char, draw_func> _form_map;
 
     private:
 };
