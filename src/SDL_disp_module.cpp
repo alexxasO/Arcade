@@ -15,14 +15,37 @@ static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
 
 static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
-    SDL_Rect rect;
+    SDL_Rect rect1;
+    SDL_Rect rect2;
+    SDL_Rect rect3;
+    SDL_Rect rect4;
 
-    rect.h = DELTA(y.first);
-    rect.w = DELTA(y.second);
-    rect.x = DELTA(x.first);
-    rect.y = DELTA(x.second);
+
+    rect1.x = DELTA(x.first);
+    rect1.y = DELTA(x.second);
+    rect1.h = DELTA(x.first + 1);
+    rect1.w = DELTA(y.second);
+
+    rect2.x = DELTA(x.first);
+    rect2.y = DELTA(y.second - 1);
+    rect2.h = DELTA(x.first + 1);
+    rect2.w = DELTA(y.second);
+
+    rect3.x = DELTA(y.first - 1);
+    rect3.y = DELTA(x.second);
+    rect3.h = DELTA(y.first);
+    rect3.w = DELTA(x.second + 1);
+
+    rect4.x = DELTA(x.first);
+    rect4.y = DELTA(x.second);
+    rect4.h = DELTA(y.first);
+    rect4.w = DELTA(x.second + 1);
+
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawRect(render, &rect);
+    SDL_RenderFillRect(render, &rect1);
+    SDL_RenderFillRect(render, &rect2);
+    SDL_RenderFillRect(render, &rect3);
+    SDL_RenderFillRect(render, &rect4);
 }
 
 SDL_display_module::SDL_display_module()

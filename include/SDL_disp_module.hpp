@@ -12,7 +12,7 @@
 #include <SDL2/SDL.h>
 
 typedef void (*draw_form)(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color);
-#define DELTA(x) ((x) * 8.00000000000007)
+#define DELTA(x) ((x) * 8)
 
 class SDL_display_module : public IDisplayModule {
     public:
