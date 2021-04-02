@@ -58,6 +58,8 @@ Ncurses_disp_module::Ncurses_disp_module()
 
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
+    maxx = getmaxx(_main_win);
+    maxy = getmaxy(_main_win);
 }
 
 Ncurses_disp_module::~Ncurses_disp_module()

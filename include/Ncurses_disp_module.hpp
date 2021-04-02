@@ -37,6 +37,8 @@ class Ncurses_disp_module : public IDisplayModule {
     protected:
         WINDOW *_main_win;
         std::map<char, draw_func> _form_map;
+        int maxx;
+        int maxy;
 
     private:
 };
