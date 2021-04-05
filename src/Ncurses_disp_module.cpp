@@ -8,6 +8,19 @@
 #include "Ncurses_disp_module.hpp"
 #include "tools.hpp"
 
+static void draw_line2(std::pair<int, int> coord, std::pair<int, int> coord2, color_t color)
+{
+    int x;
+    int y;
+    int dx = coord2.first - coord.first;
+    int dy = coord2.second - coord.second;
+
+    for (x = coord.first; x <= coord2.first; x++) {
+        y = coord.second + dy * (x - coord.first) / dx;
+        mvaddch(y, x, '*');
+    }
+}
+
 static void draw_line(const cell_t &cell, const color_t &color)
 {
     std::pair<int, int> x = cell.position;
@@ -16,12 +29,12 @@ static void draw_line(const cell_t &cell, const color_t &color)
     if (x.second == y.second) {
         wmove(stdscr, x.second, x.first);
         hline('*', MAX(x.first, y.first) - MIN(x.first, y.first));
-    }
-    if (x.first == y.first) {
+    } else if (x.first == y.first) {
         wmove(stdscr, x.second, x.first);
         vline('*', MAX(x.second, y.second) - MIN(x.second, y.second));
+    } else {
+        draw_line2(x, y, color);
     }
-    // TODO: draw a non-straight line
 }
 
 static void draw_char(const cell_t &cell, const color_t &color)
@@ -44,6 +57,12 @@ static void draw_rect(const cell_t &cell, const color_t &color)
 Ncurses_disp_module::Ncurses_disp_module()
 {
     _main_win = initscr();
+    if (has_colors() == FALSE) {
+        endwin();
+        printf("Your terminal does not support colors\n");
+        exit(1);
+    }
+    start_color();
     if (!_main_win)
         fprintf(stderr, "ncurses initscr error\n");
     if (cbreak() == ERR) {
