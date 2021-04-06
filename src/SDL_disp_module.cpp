@@ -16,10 +16,8 @@ static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
 static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
     SDL_Rect rect1;
-    SDL_Rect rect2;
-    SDL_Rect rect3;
-    SDL_Rect rect4;
 
+    (void)y;
     rect1.x = DELTA_X(x.first);
     rect1.y = DELTA_Y(x.second);
     rect1.h = TILE_X;
@@ -31,7 +29,10 @@ static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
 
 static void draw_triangle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
-
+    (void)x;
+    (void)y;
+    (void)render;
+    (void)color;
 }
 
 static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
@@ -40,9 +41,11 @@ static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Render
     int offset_y;
     int d;
 
+    (void)y;
     offset_x = 0;
     offset_y = TILE_Y / 2;
     d = offset_y - 1;
+    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     while (offset_y >= offset_x) {
         SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_y, DELTA_Y(x.second) + offset_x,
                            DELTA_X(x.first) + offset_y, DELTA_Y(x.second) + offset_x);
