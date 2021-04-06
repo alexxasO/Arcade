@@ -10,7 +10,7 @@
 static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(render, DELTA(x.first), DELTA(x.second), DELTA(y.first), DELTA(y.second));
+    SDL_RenderDrawLine(render, DELTA_X(x.first), DELTA_Y(x.second), DELTA_X(y.first), DELTA_Y(y.second));
 }
 
 static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
@@ -20,32 +20,70 @@ static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
     SDL_Rect rect3;
     SDL_Rect rect4;
 
-
-    rect1.x = DELTA(x.first);
-    rect1.y = DELTA(x.second);
-    rect1.h = DELTA(x.first + 1);
-    rect1.w = DELTA(y.second);
-
-    rect2.x = DELTA(x.first);
-    rect2.y = DELTA(y.second - 1);
-    rect2.h = DELTA(x.first + 1);
-    rect2.w = DELTA(y.second);
-
-    rect3.x = DELTA(y.first - 1);
-    rect3.y = DELTA(x.second);
-    rect3.h = DELTA(y.first);
-    rect3.w = DELTA(x.second + 1);
-
-    rect4.x = DELTA(x.first);
-    rect4.y = DELTA(x.second);
-    rect4.h = DELTA(y.first);
-    rect4.w = DELTA(x.second + 1);
+    rect1.x = DELTA_X(x.first);
+    rect1.y = DELTA_Y(x.second);
+    rect1.h = TILE_X;
+    rect1.w = TILE_Y;
 
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(render, &rect1);
-    SDL_RenderFillRect(render, &rect2);
-    SDL_RenderFillRect(render, &rect3);
-    SDL_RenderFillRect(render, &rect4);
+}
+
+static void draw_triangle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+{
+
+}
+
+static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+{
+    int offset_x;
+    int offset_y;
+    int d;
+
+    offset_x = 0;
+    offset_y = TILE_Y / 2;
+    d = offset_y - 1;
+    while (offset_y >= offset_x) {
+        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_y, DELTA_Y(x.second) + offset_x,
+                           DELTA_X(x.first) + offset_y, DELTA_Y(x.second) + offset_x);
+        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_x, DELTA_Y(x.second) + offset_y,
+                           DELTA_X(x.first) + offset_x, DELTA_Y(x.second) + offset_y);
+        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_x, DELTA_Y(x.second) - offset_y,
+                           DELTA_X(x.first) + offset_x, DELTA_Y(x.second) - offset_y);
+        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_y, DELTA_Y(x.second) - offset_x,
+                           DELTA_X(x.first) + offset_y, DELTA_Y(x.second) - offset_x);
+        if (d >= 2 * offset_x) {
+            d -= 2 * offset_x + 1;
+            offset_x += 1;
+        } else if (d < 2 * ((TILE_Y / 2) - offset_y)) {
+            d += 2 * offset_y - 1;
+            offset_y -= 1;
+        } else {
+            d += 2 * (offset_y - offset_x - 1);
+            offset_y -= 1;
+            offset_x += 1;
+        }
+    }
+}
+
+static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color)
+{
+    TTF_Font *text = TTF_OpenFont("./my_assets/ostrich-regular.ttf", TILE_X);
+    if (!text) {
+        printf("ca a merde qql part %s\n", TTF_GetError());
+        exit(84);
+    }
+    std::string mess(1, cell.c);
+    SDL_Color White = {color.r, color.g, color.b, color.a};
+    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(text, mess.c_str(), White);
+    SDL_Texture *Message = SDL_CreateTextureFromSurface(render, surfaceMessage);
+    SDL_Rect Message_rect;
+
+    Message_rect.x = DELTA_X(cell.position.first);
+    Message_rect.y = DELTA_Y(cell.position.second);
+    Message_rect.h = TILE_X;
+    Message_rect.w = TILE_Y;
+    SDL_RenderCopy(render, Message, nullptr, &Message_rect);
 }
 
 SDL_display_module::SDL_display_module()
@@ -56,8 +94,14 @@ SDL_display_module::SDL_display_module()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[debug] %s", SDL_GetError());
         exit(1);
     }
+    if (TTF_Init() == -1) {
+        printf("%s", TTF_GetError());
+
+    }
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
+    _form_map['v'] = &draw_triangle;
+    _form_map['o'] = &draw_circle;
 }
 
 SDL_display_module::~SDL_display_module()
@@ -71,12 +115,14 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
 {
     SDL_Color color;
 
-    if (cell.plainChar)
-        return;
     color.a = GETALPHA(cell.bgColor);
     color.r = GETRED(cell.bgColor);
     color.g = GETGREEN(cell.bgColor);
     color.b = GETBLUE(cell.bgColor);
+    if (cell.plainChar) {
+        draw_text(cell, _render, color);
+        return;
+    }
     _form_map[cell.c](cell.position, cell.offset, _render, color);
 
 }

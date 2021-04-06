@@ -11,7 +11,7 @@ OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -lSDL2_ttf
 
 all: $(NAME)
 
