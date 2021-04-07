@@ -179,9 +179,3 @@ void SDL_display_module::createRender(int flags)
         exit(1);
     }
 }
-
-void SDL_display_module::draw(int r, int g, int b, int a)
-{
-    SDL_SetRenderDrawColor(_render, r, g, b, a);
-    SDL_RenderClear(_render);
-}
