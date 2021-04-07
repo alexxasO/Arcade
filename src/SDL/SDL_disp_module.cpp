@@ -33,6 +33,7 @@ static void draw_triangle(std::pair<int, int> x, std::pair<int, int> y, SDL_Rend
     (void)y;
     (void)render;
     (void)color;
+    //TODO: Implement triangle in SLD2
 }
 
 static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)

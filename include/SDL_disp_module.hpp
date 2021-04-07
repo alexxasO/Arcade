@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 typedef void (*draw_form)(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color);
-#define TILE_X 21
+#define TILE_X 21x
 #define TILE_Y 10
 #define DELTA_X(x) ((x) * TILE_X)
 #define DELTA_Y(y) ((y) * TILE_Y)

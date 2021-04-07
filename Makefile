@@ -4,7 +4,7 @@ CC	= g++
 
 RM	= rm -f
 
-SRCS	= 	./src/SDL_disp_module.cpp \
+SRCS	= 	./src/SDL/SDL_disp_module.cpp \
 	  		./src/main.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
