@@ -8,6 +8,23 @@
 #include "Ncurses_disp_module.hpp"
 #include "tools.hpp"
 
+static void place_char(char c, int x, int y, color_t &color)
+{
+    int col = ncurses_init_new_color(color);
+    if (col < 0) {
+        mvaddch(y, x, c);
+        return;
+    }
+    attron(COLOR_PAIR(col));
+    mvaddch(y, x, c);
+    attroff(COLOR_PAIR(col));
+}
+
+static void draw_circle(const cell_t &cell, color_t &color)
+{
+    place_char('o', cell.position.first, cell.position.second, color);
+}
+
 static void draw_line2(std::pair<int, int> coord, std::pair<int, int> coord2, color_t color)
 {
     int x;
@@ -17,41 +34,33 @@ static void draw_line2(std::pair<int, int> coord, std::pair<int, int> coord2, co
 
     for (x = coord.first; x <= coord2.first; x++) {
         y = coord.second + dy * (x - coord.first) / dx;
-        mvaddch(y, x, '*');
+        place_char('*', x, y, color);
     }
 }
 
-static void draw_line(const cell_t &cell, const color_t &color)
+static void draw_line(const cell_t &cell, color_t &color)
 {
     std::pair<int, int> x = cell.position;
     std::pair<int, int> y = cell.offset;
 
-    if (x.second == y.second) {
-        wmove(stdscr, x.second, x.first);
-        hline('*', MAX(x.first, y.first) - MIN(x.first, y.first));
-    } else if (x.first == y.first) {
-        wmove(stdscr, x.second, x.first);
-        vline('*', MAX(x.second, y.second) - MIN(x.second, y.second));
-    } else {
+    if (x.second == x.first) {
+        move(x.second, x.first);
+        hline('*', (MAX(x.second, y.second) - MIN(x.second, y.second)));
+    } else if (x.second == x.first) {
+        move(x.second, y.second);
+        vline('*', (MAX(x.first, y.first) - MIN(x.first, y.first)));
+    } else
         draw_line2(x, y, color);
-    }
 }
 
-static void draw_char(const cell_t &cell, const color_t &color)
+static void draw_char(const cell_t &cell, color_t &color)
 {
-    mvaddch(cell.position.second, cell.position.first, cell.c);
+    place_char(cell.c, cell.position.first, cell.position.second, color);
 }
 
-static void draw_rect(const cell_t &cell, const color_t &color)
+static void draw_rect(const cell_t &cell, color_t &color)
 {
-    wmove(stdscr, cell.position.second, cell.position.first);
-    hline('*', cell.offset.first);
-    wmove(stdscr, cell.position.second, cell.position.first + (cell.offset.first - 1));
-    vline('*', cell.offset.second);
-    wmove(stdscr, cell.position.second + (cell.offset.second - 1), cell.position.first);
-    hline('*', cell.offset.first);
-    wmove(stdscr, cell.position.second, cell.position.first);
-    vline('*', cell.offset.second);
+    place_char('#', cell.position.first, cell.position.second, color);
 }
 
 Ncurses_disp_module::Ncurses_disp_module()
@@ -75,10 +84,13 @@ Ncurses_disp_module::Ncurses_disp_module()
         fprintf(stderr, "ncurses keypad error\n");
     }
 
+    _nextColorID = 9;
+    _nextPairID = 1;
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
-    maxx = getmaxx(_main_win);
-    maxy = getmaxy(_main_win);
+    _form_map['o'] = &draw_circle;
+    _maxx = getmaxx(_main_win);
+    _maxy = getmaxy(_main_win);
 }
 
 Ncurses_disp_module::~Ncurses_disp_module()
@@ -88,21 +100,26 @@ Ncurses_disp_module::~Ncurses_disp_module()
 
 void Ncurses_disp_module::interpret_cell(const cell_t &cell)
 {
-    int posx = cell.position.first;
-    int posy = cell.position.second;
-    float dir = cell.direction;
-    color_t color = {0, 0, 0, 0};
+    color_t color = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    color.a = GETALPHA(cell.bgColor);
-    color.r = GETRED(cell.bgColor);
-    color.g = GETGREEN(cell.bgColor);
-    color.b = GETBLUE(cell.bgColor);
+    color.bg_a = GETALPHA(cell.bgColor) * 1000 / 255;
+    color.ch_a = GETALPHA(cell.charColor) * 1000 / 255;
+    color.bg_r = GETRED(cell.bgColor) * 1000 / 255;
+    color.ch_r = GETRED(cell.charColor) * 1000 / 255;
+    color.bg_g = GETGREEN(cell.bgColor) * 1000 / 255;
+    color.ch_g = GETGREEN(cell.charColor) * 1000 / 255;
+    color.bg_b = GETBLUE(cell.bgColor) * 1000 / 255;
+    color.ch_b = GETBLUE(cell.charColor) * 1000 / 255;
+    color.colID = _nextColorID;
+    color.pairID = _nextPairID;
 
     if (!cell.plainChar) {
         _form_map[cell.c](cell, color);
     } else {
-        mvaddch(posy, posx, cell.c);
+        draw_char(cell, color);
     }
+    _nextColorID = color.colID;
+    _nextPairID = color.pairID;
 }
 
 void Ncurses_disp_module::interpretCells(std::vector<cell_t> &cells)

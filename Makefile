@@ -7,6 +7,7 @@ RM	= rm -f
 SRCS	= 	./src/SDL_disp_module.cpp \
 	  		./src/main.cpp			\
 	  		./src/Ncurses_disp_module.cpp			\
+	  		./src/ncurses_color.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
@@ -26,5 +27,8 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+debug: CXXFLAGS += -g
+debug: re
 
 .PHONY: all clean fclean re
