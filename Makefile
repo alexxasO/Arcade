@@ -6,12 +6,14 @@ RM	= rm -f
 
 SRCS	= 	./src/SDL/SDL_disp_module.cpp \
 	  		./src/main.cpp			\
+	  		./src/Core.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra
-LDFLAGS = -lSDL2 -lSDL2_ttf
+CXXFLAGS += -std=gnu++17
+LDFLAGS = -lSDL2 -lncurses -ldl -lSDL2_ttf
 
 all: $(NAME)
 
@@ -29,5 +31,8 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+debug: CXXFLAGS += -g
+debug: re
 
 .PHONY: all clean fclean re
