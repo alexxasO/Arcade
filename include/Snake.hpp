@@ -10,10 +10,12 @@
 
 #define BOARD_SIZE 40
 
+#include "key.hpp"
+
 class Snake {
     public:
         Snake(const size_t &nb)
-            : _size(0), _Snake(nb)
+            : _size(0), _Snake(nb), _key(ARROW_RIGHT)
         {
             std::pair<int, int> center(BOARD_SIZE / 2, BOARD_SIZE / 2);
 
@@ -29,6 +31,7 @@ class Snake {
 
         std::size_t _size;
         std::vector<cell_t> _Snake;
+        keys_e _key;
     protected:
     private:
 };

@@ -9,8 +9,8 @@
 #define FRUIT_H_
 
 #define BOARD_SIZE 40
-#define RD(x)   (rand() % x)
-#define RDCOLOR ((((((0xFF << 8) + RD(0x88)) << 8) + RD(0x88)) << 8) + 0xFF)
+#define RD(x)   (rand() % (x))
+#define RDCOLOR ((((((0xFF << 8) | RD(0x88)) << 8) | RD(0x88)) << 8) | 0xFF)
 
 class Fruit {
     public:

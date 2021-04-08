@@ -22,22 +22,35 @@ void Nibbler_game_module::update(std::vector<keys_e> &events)
 {
     for (auto it = events.begin(); it != events.end(); it++) {
         if (*it == ARROW_DOWN)
-            moveVertically(1);
+            _snake._key = *it;
         else if (*it == ARROW_UP)
-            moveVertically(-1);
+            _snake._key = *it;
         else if (*it == ARROW_LEFT)
-            moveHorizontally(-1);
+            _snake._key = *it;
         else if (*it == ARROW_RIGHT)
-            moveHorizontally(1);
-        else if (*it == Q)
+            _snake._key = *it;
+        if (*it == Q)
             fprintf(stderr, "You left the game\n");
-        else if (*it == M)
+        if (*it == M)
             fprintf(stderr, "Back to menu\n");
     }
+    move();
+    refreshBoard();
 }
 
 void Nibbler_game_module::refreshBoard()
 {
+    for (auto it = _board.begin(); it != _board.end(); it++) {
+        it->c = ' ';
+        for (auto jt = _fruits._apple.begin(); jt != _fruits._apple.end(); jt++) {
+            if (jt->position == it->position)
+                *it = *jt;
+        }
+        for (auto jt = _snake._Snake.begin(); jt != _snake._Snake.end(); jt++) {
+            if (jt->position == it->position)
+                *it = *jt;
+        }
+    }
 }
 
 void Nibbler_game_module::reset()
@@ -90,6 +103,8 @@ bool Nibbler_game_module::setScore(const int &score)
 
 bool Nibbler_game_module::moveHorizontally(int dir)
 {
+    std::pair<int, int> endPos;
+
     for (auto it = _snake._Snake.end(); it != _snake._Snake.begin() - 1; it--) {
         it->position = {(it - 1)->position.first, (it - 1)->position.second + dir};
     }
@@ -102,4 +117,16 @@ bool Nibbler_game_module::moveVertically(int dir)
         it->position = {(it - 1)->position.first + dir, (it - 1)->position.second};
     }
     _snake._Snake.begin()->position.first + dir;
+}
+
+bool Nibbler_game_module::move()
+{
+    if (_snake._key == ARROW_DOWN)
+        moveVertically(1);
+    else if (_snake._key == ARROW_UP)
+        moveVertically(-1);
+    else if (_snake._key == ARROW_LEFT)
+        moveHorizontally(-1);
+    else if (_snake._key == ARROW_RIGHT)
+        moveHorizontally(1);
 }

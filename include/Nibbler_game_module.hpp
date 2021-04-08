@@ -29,6 +29,7 @@ class Nibbler_game_module : public game::IGameModule {
         /* Gameplay */
         bool moveHorizontally(int dir);
         bool moveVertically(int dir);
+        bool move();
 
         /* Getters */
         const std::vector<cell_t> &getBoard();
