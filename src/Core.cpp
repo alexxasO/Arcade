@@ -42,6 +42,10 @@ Core::Core(int ac, char *av[])
             _game_libs.push_back(entry.path());
         }
     }
+
+    if (ac == 2) {
+        load_graph_lib(av[1]);
+    }
 }
 
 Core::~Core()
@@ -96,4 +100,5 @@ bool Core::do_a_frame()
     _graph->interpretCells(_board);
     _graph->refreshScreen();
     usleep(16);
+    return true;
 }
