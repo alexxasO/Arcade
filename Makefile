@@ -4,10 +4,7 @@ CC	= g++
 
 RM	= rm -f
 
-SRCS	= 	./src/SDL_disp_module.cpp \
-	  		./src/main.cpp			\
-	  		./src/Ncurses_disp_module.cpp			\
-	  		./src/ncurses_color.cpp			\
+SRCS	= 	./src/main.cpp			\
 	  		./src/Core.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)

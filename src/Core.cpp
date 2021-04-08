@@ -11,7 +11,7 @@
 #include <algorithm>
 namespace fs = std::filesystem;
 
-Core::Core(int ac, char *av[])
+arcade::Core::Core(int ac, char *av[])
 : _graph_idx(0), _game_idx(0), _graph_lib(nullptr), _game_lib(nullptr)
 {
     _graph_libs_dict = {
@@ -49,7 +49,7 @@ Core::Core(int ac, char *av[])
     }
 }
 
-Core::~Core()
+arcade::Core::~Core()
 {
     if (_graph_lib)
         dlclose(_graph_lib);
@@ -57,7 +57,7 @@ Core::~Core()
         dlclose(_game_lib);
 }
 
-std::string Core::get_next_lib(const bool isGraph)
+std::string arcade::Core::get_next_lib(const bool isGraph)
 {
     if (isGraph) {
         if (++_graph_idx >= _graph_libs.size())
@@ -70,46 +70,50 @@ std::string Core::get_next_lib(const bool isGraph)
     }
 }
 
-IDisplayModule *Core::load_graph_lib(const char *path)
+void arcade::Core::load_graph_lib(const char *path)
 {
     fprintf(stderr, "received : %s\n", path);
-    if (_graph_lib)
+    if (_graph_lib) {
         dlclose(_graph_lib);
-    _graph_lib = dlopen(path, RTLD_LAZY);
+        _graph_lib = nullptr;
+    }
+    _graph_lib = dlopen(path, RTLD_NOW);
+    fprintf(stderr, "after open : %p\n", _graph_lib);
     if (!_graph_lib)
-        return nullptr;
-    fprintf(stderr, "ptdr : %p\n", _graph_lib);
-    if ((_graph = (IDisplayModule *)dlsym(_graph_lib, "entry_point")) == NULL)
-        return nullptr;
+        return;
+    if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
+        return;
+    _libgr = _graph();
     fprintf(stderr, "THE GRAPH : %p\n", _graph);
-    return _graph;
 }
 
-IGameModule *Core::load_game_lib(const char *path)
+void arcade::Core::load_game_lib(const char *path)
 {
-    void *class_addr;
-
-    if (_game_lib)
+    fprintf(stderr, "received : %s\n", path);
+    if (_game_lib) {
         dlclose(_game_lib);
-    _game_lib = dlopen(path, RTLD_LAZY);
+        _game_lib = nullptr;
+    }
+    _game_lib = dlopen(path, RTLD_NOW);
+    fprintf(stderr, "after open : %p\n", _game_lib);
     if (!_game_lib)
-        return nullptr;
-    if ((_game = (IGameModule *)dlsym(_game_lib, "entry_point")) == NULL)
-        return nullptr;
+        return;
+    if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
+        return;
+    _libgm = _game();
     fprintf(stderr, "THE GAME : %p\n", _game);
-    return _game;
 }
 
-bool Core::do_a_frame()
+bool arcade::Core::do_a_frame()
 {
-    std::vector<keys_e> events = _graph->pollEvent();
+    std::vector<keys_e> events = _libgr->pollEvent();
+    // std::vector<keys_e> events = {ADD};
 
-    _game->update(events);
-    _game->refreshBoard();
-    _board = _game->getBoard();
-    _score = _game->getScore();
-    _graph->interpretCells(_board);
-    _graph->refreshScreen();
+    _libgm->update(events);
+    _libgm->refreshBoard();
+    const std::vector<cell_t> &_board = (_libgm->getBoard());
+    _libgr->interpretCells(_board);
+    _libgr->refreshScreen();
     usleep(16);
     return true;
 }

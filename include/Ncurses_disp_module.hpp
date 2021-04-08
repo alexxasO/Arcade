@@ -27,9 +27,10 @@ typedef struct color_s
     int pairID;
 } color_t;
 
-
 typedef void (*draw_func)(const cell_t &, color_t &);
 
+namespace arcade {
+namespace display {
 class Ncurses_disp_module : public IDisplayModule {
     public:
         Ncurses_disp_module();
@@ -56,6 +57,8 @@ class Ncurses_disp_module : public IDisplayModule {
 
     private:
 };
+}
+}
 
 int ncurses_init_new_color(color_t &color);
 
