@@ -5,7 +5,7 @@
 ## make
 ##
 
-NAME	= arcade_sdl2.so
+NAME	= arcade_sfml.so
 
 NAME2	= mytest
 
@@ -15,13 +15,13 @@ RM	= rm -f
 
 SRCDIR = ./
 
-SRCS	=	$(SRCDIR)SDL_disp_module.cpp	\
+SRCS	=	$(SRCDIR)SFML_disp_module.cpp	\
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ../../include
 CXXFLAGS +=  -Wall -Wextra -fPIC
-LDFLAGS = -lSDL2 -lSDL2_ttf
+LDFLAGS = -lsfml-graphics -lsfml-system -lsfml-window
 
 all: $(NAME)
 

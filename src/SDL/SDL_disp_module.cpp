@@ -143,15 +143,10 @@ std::vector<keys_e> SDL_display_module::pollEvent()
     SDL_Event ev;
 
     while (SDL_PollEvent(&ev)) {
-        switch (ev.type) {
-            case SDL_QUIT:
-                std::exit(0);
-            case SDLK_x:
-                _event.push_back(X);
-                break;
-            default:
-                return _event;
-        }
+        if (ev.type == SDL_QUIT)
+            std::exit(0);
+        if (_key_map[ev.type])
+            _event.push_back(_key_map[ev.type]);
     }
     return _event;
 }
@@ -178,4 +173,12 @@ void SDL_display_module::createRender(int flags)
         printf("Failed to create renderer: %s\n", SDL_GetError());
         exit(1);
     }
+}
+
+extern "C" {
+
+std::unique_ptr<IDisplayModule> entry_point()
+{
+    return std::make_unique<SDL_display_module>();
+}
 }

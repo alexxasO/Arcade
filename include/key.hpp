@@ -41,6 +41,7 @@ typedef enum keys
     ARROW_LEFT,
     ARROW_RIGHT,
 
+    NUM_0,
     NUM_1,
     NUM_2,
     NUM_3,

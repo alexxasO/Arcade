@@ -71,6 +71,7 @@ SFML_display_module::SFML_display_module()
     _form_map['l'] = &draw_line;
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
+    _form_map[' '] = &draw_rect;
 }
 
 SFML_display_module::~SFML_display_module()
@@ -83,15 +84,15 @@ void SFML_display_module::interpretSoloCell(const cell_t& cell)
 {
     sf::Color color;
 
-    color.a = GETALPHA(cell.bgColor);
-    color.r = GETRED(cell.bgColor);
-    color.g = GETGREEN(cell.bgColor);
-    color.b = GETBLUE(cell.bgColor);
+    color.a = GETALPHA(cell.charColor);
+    color.r = GETRED(cell.charColor);
+    color.g = GETGREEN(cell.charColor);
+    color.b = GETBLUE(cell.charColor);
     if (cell.plainChar) {
         draw_text(cell, _win, color);
         return;
     }
-    _form_map[cell.c](cell.position, cell.offset, _win, color);
+    _form_map.at(cell.c)(cell.position, cell.offset, _win, color);
 
 }
 
@@ -107,15 +108,11 @@ std::vector<keys_e> SFML_display_module::pollEvent()
     sf::Event ev{};
 
     while (_win.pollEvent(ev)) {
-        switch (ev.type) {
-            case sf::Event::Closed:
+        if (ev.type == sf::Event::Closed)
                 _win.close();
-            case sf::Event::KeyPressed:
-                if (ev.key.code == sf::Keyboard::X)
-                    _event.push_back(X);
-                break;
-            default:
-                return _event;
+        if (sf::Event::KeyPressed) {
+            if (_key_map[ev.key.code])
+                _event.push_back(_key_map[ev.key.code]);
         }
     }
     return _event;
@@ -131,4 +128,12 @@ void SFML_display_module::createWindow(const std::string &name, int flags)
 {
     (void)flags;
     _win.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), name);
+}
+
+extern "C" {
+
+std::unique_ptr<IDisplayModule> entry_point()
+{
+    return std::make_unique<SFML_display_module>();
+}
 }
