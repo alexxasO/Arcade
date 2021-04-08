@@ -46,6 +46,12 @@ void Nibbler_game_module::refreshBoard()
             if (jt->position == it->position)
                 *it = *jt;
         }
+        if (_snake._Snake.begin()->position == it->position &&
+            it->c == 'o') {
+            setScore(_fruits._score);
+            increaseSnake();
+            _fruits._apple.begin()->position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
+        }
         for (auto jt = _snake._Snake.begin(); jt != _snake._Snake.end(); jt++) {
             if (jt->position == it->position)
                 *it = *jt;
@@ -103,8 +109,7 @@ bool Nibbler_game_module::setScore(const int &score)
 
 bool Nibbler_game_module::moveHorizontally(int dir)
 {
-    std::pair<int, int> endPos;
-
+    _lastPos = *_snake._Snake.end();
     for (auto it = _snake._Snake.end(); it != _snake._Snake.begin() - 1; it--) {
         it->position = {(it - 1)->position.first, (it - 1)->position.second + dir};
     }
@@ -113,6 +118,7 @@ bool Nibbler_game_module::moveHorizontally(int dir)
 
 bool Nibbler_game_module::moveVertically(int dir)
 {
+    _lastPos = *_snake._Snake.end();
     for (auto it = _snake._Snake.end(); it != _snake._Snake.begin() - 1; it--) {
         it->position = {(it - 1)->position.first + dir, (it - 1)->position.second};
     }
@@ -129,4 +135,9 @@ bool Nibbler_game_module::move()
         moveHorizontally(-1);
     else if (_snake._key == ARROW_RIGHT)
         moveHorizontally(1);
+}
+
+void Nibbler_game_module::increaseSnake()
+{
+    _snake._Snake.insert(_snake._Snake.end(), _lastPos);
 }

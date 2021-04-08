@@ -30,6 +30,7 @@ class Nibbler_game_module : public game::IGameModule {
         bool moveHorizontally(int dir);
         bool moveVertically(int dir);
         bool move();
+        void increaseSnake();
 
         /* Getters */
         const std::vector<cell_t> &getBoard();
@@ -45,6 +46,7 @@ class Nibbler_game_module : public game::IGameModule {
         int _score;
         Snake _snake;
         Fruit _fruits;
+        cell_t _lastPos;
 };
 
 #endif /* !Nibbler_game_module_h */
