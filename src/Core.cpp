@@ -93,4 +93,5 @@ bool Core::do_a_frame()
     _score = _game->getScore();
     _graph->interpretCells(_board);
     _graph->refreshScreen();
+    usleep(16);
 }
