@@ -27,12 +27,13 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) -shared -o $(NAME) $(OBJS)
+	mv $(NAME) ../../lib/
 
 clean:
 	$(RM) $(OBJS)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) ../../lib/$(NAME)
 
 re: fclean all
 

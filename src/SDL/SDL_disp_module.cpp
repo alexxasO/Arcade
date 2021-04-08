@@ -106,6 +106,7 @@ SDL_display_module::SDL_display_module()
     _form_map['l'] = &draw_line;
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
+    _form_map[' '] = &draw_rect;
 }
 
 SDL_display_module::~SDL_display_module()

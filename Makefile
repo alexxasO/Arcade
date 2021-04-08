@@ -21,9 +21,9 @@ $(NAME): $(OBJS)
 clean:
 	$(RM) $(OBJS)
 
-lib:
-	make re -C ./src/SDL/
-	make re -C ./src/SFML/
+lib: fclean
+	make -C ./src/SDL/ re
+	make -C ./src/SFML/ re
 
 fclean: clean
 	$(RM) $(NAME)
