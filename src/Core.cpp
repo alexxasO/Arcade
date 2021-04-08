@@ -46,6 +46,8 @@ Core::Core(int ac, char *av[])
 
 Core::~Core()
 {
+    dlclose(_graph_lib);
+    dlclose(_game_lib);
 }
 
 std::string Core::get_next_lib(const bool isGraph)
@@ -63,8 +65,8 @@ std::string Core::get_next_lib(const bool isGraph)
 
 IDisplayModule *Core::load_graph_lib(const char *path)
 {
+    dlclose(_graph_lib);
     _graph_lib = dlopen(path, RTLD_LAZY);
-
     if (!_graph_lib)
         return nullptr;
     if ((_graph = (IDisplayModule *)dlsym(_graph_lib, "IDisplayModule")) == NULL)
@@ -74,8 +76,8 @@ IDisplayModule *Core::load_graph_lib(const char *path)
 
 IGameModule *Core::load_game_lib(const char *path)
 {
+    dlclose(_game_lib);
     _game_lib = dlopen(path, RTLD_LAZY);
-
     if (!_game_lib)
         return nullptr;
     if ((_game = (IGameModule *)dlsym(_game_lib, "IGameModule")) == NULL)
