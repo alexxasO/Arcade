@@ -46,11 +46,11 @@ void Nibbler_game_module::refreshBoard()
             if (jt->position == it->position)
                 *it = *jt;
         }
-        if (_snake._Snake.begin()->position == it->position &&
-            it->c == 'o') {
-            setScore(_fruits._score);
-            increaseSnake();
-            _fruits._apple.begin()->position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
+        if (_snake._Snake.begin()->position == it->position) {
+            if (it->c == 'o')
+                eat();
+            if (it->c == 'r')
+                fprintf(stderr, "Game over\n");
         }
         for (auto jt = _snake._Snake.begin(); jt != _snake._Snake.end(); jt++) {
             if (jt->position == it->position)
@@ -135,9 +135,16 @@ bool Nibbler_game_module::move()
         moveHorizontally(-1);
     else if (_snake._key == ARROW_RIGHT)
         moveHorizontally(1);
+    if (_snake._Snake.begin()->position.first < 0 ||
+        _snake._Snake.begin()->position.second < 0 ||
+        _snake._Snake.begin()->position.first >= BOARD_SIZE ||
+        _snake._Snake.begin()->position.second >= BOARD_SIZE)
+        fprintf(stderr, "Game over\n");
 }
 
-void Nibbler_game_module::increaseSnake()
+void Nibbler_game_module::eat()
 {
+    setScore(_fruits._score);
     _snake._Snake.insert(_snake._Snake.end(), _lastPos);
+    _fruits._apple.begin()->position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
 }
