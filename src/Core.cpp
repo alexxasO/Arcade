@@ -9,6 +9,7 @@
 #include <iostream>
 #include <filesystem>
 #include <algorithm>
+#include <unistd.h>
 namespace fs = std::filesystem;
 
 arcade::Core::Core(int ac, char *av[])
@@ -84,7 +85,7 @@ void arcade::Core::load_graph_lib(const char *path)
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
         return;
     _libgr = _graph();
-    fprintf(stderr, "THE GRAPH : %p\n", _graph);
+    fprintf(stderr, "THE GRAPH : %p\n", _libgr.get());
 }
 
 void arcade::Core::load_game_lib(const char *path)
@@ -101,7 +102,7 @@ void arcade::Core::load_game_lib(const char *path)
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
         return;
     _libgm = _game();
-    fprintf(stderr, "THE GAME : %p\n", _game);
+    fprintf(stderr, "THE GAME : %p\n", _libgm.get());
 }
 
 bool arcade::Core::do_a_frame()
@@ -109,10 +110,14 @@ bool arcade::Core::do_a_frame()
     std::vector<keys_e> events = _libgr->pollEvent();
     // std::vector<keys_e> events = {ADD};
 
-    _libgm->update(events);
-    _libgm->refreshBoard();
-    const std::vector<cell_t> &_board = (_libgm->getBoard());
-    _libgr->interpretCells(_board);
+    _libgm->update(events, 0);
+    fprintf(stderr, "1\n");
+    const std::vector<arcade::cell_t> board = _libgm->getBoard();
+    for (const auto &cell : board) {
+        fprintf(stderr, "cell :\n\tpos (%d, %d)\n", cell.position.first, cell.position.second);
+    }
+    _libgr->interpretCells(board);
+    fprintf(stderr, "2\n");
     _libgr->refreshScreen();
     usleep(16);
     return true;
