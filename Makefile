@@ -8,11 +8,13 @@ SRCS	= 	./src/SDL_disp_module.cpp \
 	  		./src/main.cpp			\
 	  		./src/Ncurses_disp_module.cpp			\
 	  		./src/ncurses_color.cpp			\
+	  		./src/Core.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra
+CXXFLAGS += -std=gnu++17
 LDFLAGS = -lSDL2 -lncurses
 
 all: $(NAME)
