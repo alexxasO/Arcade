@@ -5,6 +5,9 @@
 ** Cell
 */
 
+#ifndef CELL_H_
+#define CELL_H_
+
 #define SETRED(x, y) (x) = (((x) & ~(0xFF << 24)) | (((y) & 0xFF) << 24))
 #define SETGREEN(x, y) (x) = (((x) & ~(0xFF << 16)) | (((y) & 0xFF) << 16))
 #define SETBLUE(x, y) (x) = (((x) & ~(0xFF << 8)) | (((y) & 0xFF) << 8))
@@ -27,3 +30,5 @@ typedef struct cell
 	std::string imagePath; // data for image
 	std::string soundPath; // data for sound
 } cell_t;
+
+#endif /* !CELL_H_ */

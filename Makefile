@@ -6,12 +6,13 @@ RM	= rm -f
 
 SRCS	= 	./src/SDL_disp_module.cpp \
 	  		./src/main.cpp			\
+	  		./src/Menu.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
-CXXFLAGS = -I ./include
+CXXFLAGS = -I ./include -std=c++17
 CXXFLAGS +=  -Wall -Wextra
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -ldl
 
 all: $(NAME)
 

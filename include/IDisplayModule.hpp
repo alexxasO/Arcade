@@ -24,11 +24,11 @@ class IDisplayModule {
 	    // Display board
 
         virtual void interpretCells(std::vector<cell_t> &cells) = 0;
-		
+
         // Poll event
 
         virtual std::vector<keys_e> pollEvent() = 0;
-        
+
         // Refresh frame
 
         virtual void refreshScreen() = 0;

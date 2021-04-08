@@ -1,34 +1,36 @@
 /*
 ** EPITECH PROJECT, 2021
-** Nibbler_game_module.cpp
+** Menu.cpp
 ** File description:
-** Nibbler_game_module
+** Menu
 */
 
-#ifndef Nibbler_game_module_h
-#define Nibbler_game_module_h
+#ifndef Menu_h
+#define Menu_h
 
 #define BOARD_SIZE 40
 
 #include <vector>
+#include <map>
+#include <string>
+#include <iostream>
+#include <filesystem>
+#include <dlfcn.h>
+#include <algorithm>
 #include "Cell.hpp"
 #include "Fruit.hpp"
 #include "Snake.hpp"
 #include "IGameModule.hpp"
 
-class Nibbler_game_module : public game::IGameModule {
+class Menu : public game::IGameModule {
     public:
-        Nibbler_game_module();
-        ~Nibbler_game_module();
+        Menu();
+        ~Menu();
 
         /* Member functions */
 		void update(std::vector<keys_e> &events);
         void refreshBoard();
         void reset();
-
-        /* Gameplay */
-        bool moveHorizontally(int dir);
-        bool moveVertically(int dir);
 
         /* Getters */
         const std::vector<cell_t> &getBoard();
@@ -37,13 +39,14 @@ class Nibbler_game_module : public game::IGameModule {
         /* Setters */
         bool setBoard(const std::pair<int, int> &, const cell_t &);
 		bool setScore(const int &);
+        bool setGameList();
+        void setTextOnBoard(std::pair<int, int>, std::string);
 
     protected:
     private:
         std::vector<cell_t> _board;
         int _score;
-        Snake _snake;
-        Fruit _fruits;
+        std::map<std::size_t, std::string> _gameList;
 };
 
-#endif /* !Nibbler_game_module_h */
+#endif /* !Menu_h */
