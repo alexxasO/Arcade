@@ -15,7 +15,7 @@ OBJS	= $(SRCS:.cpp=.o)
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra
 CXXFLAGS += -std=gnu++17
-LDFLAGS = -lSDL2 -lncurses
+LDFLAGS = -lSDL2 -lncurses -ldl
 
 all: $(NAME)
 

@@ -12,7 +12,7 @@
 namespace fs = std::filesystem;
 
 Core::Core(int ac, char *av[])
-: _graph_idx(0), _game_idx(0)
+: _graph_idx(0), _game_idx(0), _graph_lib(nullptr), _game_lib(nullptr)
 {
     _graph_libs_dict = {
         "./lib/arcade_ndk++.so",
@@ -45,13 +45,16 @@ Core::Core(int ac, char *av[])
 
     if (ac == 2) {
         load_graph_lib(av[1]);
+        load_game_lib("./lib/arcade_nibbler.so");
     }
 }
 
 Core::~Core()
 {
-    dlclose(_graph_lib);
-    dlclose(_game_lib);
+    if (_graph_lib)
+        dlclose(_graph_lib);
+    if (_game_lib)
+        dlclose(_game_lib);
 }
 
 std::string Core::get_next_lib(const bool isGraph)
@@ -69,23 +72,31 @@ std::string Core::get_next_lib(const bool isGraph)
 
 IDisplayModule *Core::load_graph_lib(const char *path)
 {
-    dlclose(_graph_lib);
+    fprintf(stderr, "received : %s\n", path);
+    if (_graph_lib)
+        dlclose(_graph_lib);
     _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
         return nullptr;
-    if ((_graph = (IDisplayModule *)dlsym(_graph_lib, "IDisplayModule")) == NULL)
+    fprintf(stderr, "ptdr : %p\n", _graph_lib);
+    if ((_graph = (IDisplayModule *)dlsym(_graph_lib, "entry_point")) == NULL)
         return nullptr;
+    fprintf(stderr, "THE GRAPH : %p\n", _graph);
     return _graph;
 }
 
 IGameModule *Core::load_game_lib(const char *path)
 {
-    dlclose(_game_lib);
+    void *class_addr;
+
+    if (_game_lib)
+        dlclose(_game_lib);
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
         return nullptr;
-    if ((_game = (IGameModule *)dlsym(_game_lib, "IGameModule")) == NULL)
+    if ((_game = (IGameModule *)dlsym(_game_lib, "entry_point")) == NULL)
         return nullptr;
+    fprintf(stderr, "THE GAME : %p\n", _game);
     return _game;
 }
 
