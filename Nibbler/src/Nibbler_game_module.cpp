@@ -46,7 +46,8 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
             reset();
     }
     move();
-    refreshBoard();
+    if (elapsedTime == 1.0)
+        refreshBoard();
 }
 
 void arcade::game::Nibbler_game_module::refreshBoard()
