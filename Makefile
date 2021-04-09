@@ -9,26 +9,35 @@ SRCS	= 	./src/main.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
-CXXFLAGS = -I ./include -std=c++17
-CXXFLAGS +=  -Wall -Wextra
-CXXFLAGS += -std=gnu++17
-LDFLAGS = -lSDL2 -lncurses -ldl
+CXXFLAGS = -I ./include
+CXXFLAGS +=  -Wall -Wextra -std=gnu++17
+LXXFLAGS = -ldl
+
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C Nibbler/ re
-	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+	$(CC) $(OBJS) -o $(NAME) $(LXXFLAGS) $(LDFLAGS)
 
 clean:
 	$(RM) $(OBJS)
+
+lib:
+	make -C ./src/SDL/
+	make -C ./src/SFML/
 
 fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
 
-debug: CXXFLAGS += -g
+lib-debug: CXXFLAGS += -g3
+lib-debug:
+	make -C ./src/SDL/ debug
+	make -C ./src/SFML/ debug
+
+debug: CXXFLAGS += -g3
 debug: re
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re lib

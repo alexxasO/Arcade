@@ -10,6 +10,8 @@
 #include <filesystem>
 #include <algorithm>
 #include <unistd.h>
+#include "keys.hpp"
+
 namespace fs = std::filesystem;
 
 arcade::Core::Core(int ac, char *av[])
@@ -45,13 +47,21 @@ arcade::Core::Core(int ac, char *av[])
     }
 
     if (ac == 2) {
-        load_graph_lib(av[1]);
-        load_game_lib("./lib/arcade_nibbler.so");
+        try {
+            load_graph_lib(av[1]);
+            load_game_lib("./lib/arcade_nibbler_arthur.so");
+            _now = std::chrono::system_clock::now();
+        } catch(const std::exception& e) {
+            fprintf(stderr, "%s", e.what());
+            exit(84);
+        }
     }
 }
 
 arcade::Core::~Core()
 {
+    _libgr.reset();
+    _libgm.reset();
     if (_graph_lib)
         dlclose(_graph_lib);
     if (_game_lib)
@@ -77,11 +87,11 @@ void arcade::Core::load_graph_lib(const char *path)
         dlclose(_graph_lib);
         _graph_lib = nullptr;
     }
-    _graph_lib = dlopen(path, RTLD_NOW);
+    _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
-        exit(84);
+        throw std::runtime_error("failed to load lib");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        exit(84);
+        throw std::runtime_error("failed to load symbol");
     _libgr = _graph();
 }
 
@@ -93,19 +103,32 @@ void arcade::Core::load_game_lib(const char *path)
     }
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        exit(84);
+        throw std::runtime_error("failed to load lib");
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        exit(84);
+        throw std::runtime_error("failed to load symbol");
     _libgm = _game();
+}
+
+static bool interpret_events(std::vector<arcade::keys_e> &events) {
+    for (const auto & key : events) {
+        if (key == arcade::ESC) {
+            remove(events.begin(), events.end(), key);
+            return false;
+        }
+    }
+    return true;
 }
 
 bool arcade::Core::do_a_frame()
 {
     std::vector<keys_e> events = _libgr->pollEvent();
-    // std::vector<keys_e> events = {ADD};
 
-    std::cerr << _libgm->getScore() << std::endl;
-    _libgm->update(events, 0);
+    if (!interpret_events(events)) {
+        return false;
+    }
+    _elapsed_time = std::chrono::system_clock::now() - _now;
+    _now = std::chrono::system_clock::now();
+    _libgm->update(events, _elapsed_time.count());
     _libgr->interpretCells(_libgm->getBoard());
     _libgr->refreshScreen();
     return true;

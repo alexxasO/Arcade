@@ -15,13 +15,12 @@
 
 #include <vector>
 #include <string>
-
+#include <map>
 #include "Cell.hpp"
 #include "keys.hpp"
+#include "define.hpp"
 
-namespace arcade
-{
-namespace display
+namespace arcade::display
 {
     class IDisplayModule {
       public:
@@ -46,8 +45,9 @@ namespace display
          * the window
          */
         virtual void refreshScreen() = 0;
-    };
-} // namespace display
+        protected:
+        private:
+        };
 } // namespace arcade
 
 #endif /* !IDISPLAYMODULE_HPP_ */
