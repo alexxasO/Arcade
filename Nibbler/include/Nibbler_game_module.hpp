@@ -50,6 +50,7 @@ namespace arcade::game
             Snake _snake;
             Fruit _fruits;
             cell_t _lastPos;
+            float _timer;
     };
 }
 

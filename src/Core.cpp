@@ -49,7 +49,7 @@ arcade::Core::Core(int ac, char *av[])
     if (ac == 2) {
         try {
             load_graph_lib(av[1]);
-            load_game_lib("./lib/arcade_nibbler_arthur.so");
+            load_game_lib("./lib/arcade_nibbler.so");
             _now = std::chrono::system_clock::now();
         } catch(const std::exception& e) {
             fprintf(stderr, "%s", e.what());
@@ -89,9 +89,9 @@ void arcade::Core::load_graph_lib(const char *path)
     }
     _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
-        throw std::runtime_error("failed to load lib");
+        throw std::runtime_error("failed to load graphic lib\n");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        throw std::runtime_error("failed to load symbol");
+        throw std::runtime_error("failed to load graphic symbol\n");
     _libgr = _graph();
 }
 
@@ -103,9 +103,9 @@ void arcade::Core::load_game_lib(const char *path)
     }
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        throw std::runtime_error("failed to load lib");
+        throw std::runtime_error("failed to load game lib\n");
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        throw std::runtime_error("failed to load symbol");
+        throw std::runtime_error("failed to load game symbol\n");
     _libgm = _game();
 }
 
