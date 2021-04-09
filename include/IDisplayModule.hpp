@@ -17,24 +17,27 @@
 #include "Cell.hpp"
 #include <map>
 
-class IDisplayModule {
-    public:
-        virtual ~IDisplayModule() = default;
+namespace arcade {
+    namespace display {
+        class IDisplayModule {
+        public:
+            virtual ~IDisplayModule() = default;
 
-	    // Display board
+            // Display board
 
-        virtual void interpretCells(std::vector<cell_t> &cells) = 0;
-		
-        // Poll event
+            virtual void interpretCells(std::vector<cell_t> &cells) = 0;
 
-        virtual std::vector<keys_e> pollEvent() = 0;
-        
-        // Refresh frame
+            // Poll event
 
-        virtual void refreshScreen() = 0;
+            virtual std::vector<keys_e> pollEvent() = 0;
 
-    protected:
-    private:
-};
+            // Refresh frame
 
+            virtual void refreshScreen() = 0;
+
+        protected:
+        private:
+        };
+    }
+}
 #endif /* !IDISPLAYMODULE_HPP_ */

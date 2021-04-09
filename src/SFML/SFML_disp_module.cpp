@@ -7,6 +7,9 @@
 
 #include "SFML_disp_module.hpp"
 
+using namespace arcade::display;
+using namespace arcade;
+
 static void draw_line(std::pair<int, int> x, std::pair<int, int> y, sf::RenderWindow &win, sf::Color color)
 {
     (void)x;
@@ -67,11 +70,13 @@ static void draw_text(const cell_t &cell, sf::RenderWindow &win, sf::Color color
 
 SFML_display_module::SFML_display_module()
 {
+    createWindow("Arcade", 1);
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
     _form_map[' '] = &draw_rect;
+    std::cout << "SFML ctor" << std::endl;
 }
 
 SFML_display_module::~SFML_display_module()
@@ -110,7 +115,7 @@ std::vector<keys_e> SFML_display_module::pollEvent()
     while (_win.pollEvent(ev)) {
         if (ev.type == sf::Event::Closed)
                 _win.close();
-        if (sf::Event::KeyPressed) {
+        if (ev.type == sf::Event::KeyPressed) {
             if (_key_map[ev.key.code])
                 _event.push_back(_key_map[ev.key.code]);
         }

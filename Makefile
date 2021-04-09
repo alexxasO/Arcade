@@ -4,14 +4,15 @@ CC	= g++
 
 RM	= rm -f
 
-SRCS	= 	./src/SDL/SDL_disp_module.cpp \
+SRCS	= 	./src/SFML/SFML_disp_module.cpp \
 	  		./src/main.cpp			\
+#			./src/SDL/SDL_disp_module.cpp \
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra
-LDFLAGS = -lSDL2 -lSDL2_ttf
+LDFLAGS = -lSDL2 -lSDL2_ttf -lsfml-graphics -lsfml-system -lsfml-window
 
 all: $(NAME)
 
@@ -28,6 +29,6 @@ lib: fclean
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean all
+re: fclean
 
 .PHONY: all clean fclean re

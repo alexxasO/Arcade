@@ -11,7 +11,7 @@ NAME2	= mytest
 
 CC	= g++
 
-RM	= rm
+RM	= rm -f
 
 SRCDIR = ./
 

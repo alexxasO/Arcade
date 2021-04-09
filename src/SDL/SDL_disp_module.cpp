@@ -7,6 +7,9 @@
 
 #include "SDL_disp_module.hpp"
 
+using namespace arcade::display;
+using namespace arcade;
+
 static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
 {
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
@@ -107,6 +110,9 @@ SDL_display_module::SDL_display_module()
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
     _form_map[' '] = &draw_rect;
+    createWindow("Arcade", 0);
+    createRender(SDL_RENDERER_ACCELERATED);
+    std::cout << "SFML ctor" << std::endl;
 }
 
 SDL_display_module::~SDL_display_module()
@@ -129,7 +135,6 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
         return;
     }
     _form_map[cell.c](cell.position, cell.offset, _render, color);
-
 }
 
 void SDL_display_module::interpretCells(std::vector<cell_t> &cells)
