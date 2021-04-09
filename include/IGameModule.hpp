@@ -19,7 +19,7 @@
 #include "key.hpp"
 #include "Cell.hpp"
 
-namespace game
+namespace arcade::game
 {
 	class IGameModule {
 	    public:
@@ -30,6 +30,7 @@ namespace game
 			 *
 			 * @param events The events to be interpreted by the game
 			 *                in order to update it
+			 *
 			 */
 			virtual void update(std::vector<keys_e> &events) = 0;
 	        virtual void refreshBoard() = 0;
