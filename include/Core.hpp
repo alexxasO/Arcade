@@ -13,6 +13,8 @@
 #include <vector>
 #include <deque>
 #include <memory>
+#include <iostream>
+#include <chrono>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
 
@@ -43,7 +45,8 @@ class Core {
         std::unique_ptr<arcade::game::IGameModule> _libgm;
         void *_game_lib;
 
-        int _score;
+        std::chrono::time_point<std::chrono::system_clock> _now;
+        std::chrono::duration<float> _elapsed_time;
 
     private:
 };
