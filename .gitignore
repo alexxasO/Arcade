@@ -6,4 +6,4 @@ vgcore*
 .dist/
 arcade
 *.log
-**/*.so
+./lib/
