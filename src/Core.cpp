@@ -30,15 +30,14 @@ arcade::Core::Core(int ac, char *av[])
         "./lib/arcade_qt5.so"
     };
     _game_libs_dict = {
-        "arcade_nibbler.so",
-        "arcade_pacman.so",
-        "arcade_qix.so",
-        "arcade_centipede.so",
-        "arcade_solarfox.so"
+        "./lib/arcade_nibbler.so",
+        "./lib/arcade_pacman.so",
+        "./lib/arcade_qix.so",
+        "./lib/arcade_centipede.so",
+        "./lib/arcade_solarfox.so"
     };
 
     for (const auto & entry : fs::directory_iterator("./lib")) {
-        fprintf(stderr, "file : %s\n", entry.path().c_str());
         if (std::find(_graph_libs_dict.begin(), _graph_libs_dict.end(), entry.path()) != _graph_libs_dict.end()) {
             _graph_libs.push_back(entry.path());
         }
@@ -50,7 +49,7 @@ arcade::Core::Core(int ac, char *av[])
     if (ac == 2) {
         try {
             load_graph_lib(av[1]);
-            load_game_lib("./lib/arcade_nibbler_arthur.so");
+            load_game_lib(_game_libs[0].c_str());
             _now = std::chrono::system_clock::now();
         } catch(const std::exception& e) {
             fprintf(stderr, "%s", e.what());
@@ -69,12 +68,24 @@ arcade::Core::~Core()
         dlclose(_game_lib);
 }
 
+std::string arcade::Core::get_prev_lib(const bool isGraph)
+{
+    if (isGraph) {
+        if (_graph_idx-- <= 0)
+            _graph_idx = _graph_libs.size() - 1;
+        return _graph_libs[_graph_idx];
+    } else {
+        if (_game_idx-- <= 0)
+            _game_idx = _game_libs.size() - 1;
+        return _game_libs[_game_idx];
+    }
+}
+
 std::string arcade::Core::get_next_lib(const bool isGraph)
 {
     if (isGraph) {
         if (++_graph_idx >= _graph_libs.size())
             _graph_idx = 0;
-        fprintf(stderr, "idx : %ld\n_graph_libs.size :%ld\n", _graph_idx, _graph_libs.size());
         return _graph_libs[_graph_idx];
     } else {
         if (++_game_idx >= _game_libs.size())
@@ -85,6 +96,8 @@ std::string arcade::Core::get_next_lib(const bool isGraph)
 
 void arcade::Core::load_graph_lib(const char *path)
 {
+    if (path)
+        _last_path_graph = path;
     if (_graph_lib) {
         _libgr.reset();
         dlclose(_graph_lib);
@@ -92,14 +105,16 @@ void arcade::Core::load_graph_lib(const char *path)
     }
     _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
-        throw std::runtime_error("failed to load lib");
+        throw std::runtime_error("Display Module : failed to load lib");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        throw std::runtime_error("failed to load symbol");
+        throw std::runtime_error("Display Module : failed to load symbol");
     _libgr = _graph();
 }
 
 void arcade::Core::load_game_lib(const char *path)
 {
+    if (path)
+        _last_path_game = path;
     if (_game_lib) {
         _libgm.reset();
         dlclose(_game_lib);
@@ -107,9 +122,9 @@ void arcade::Core::load_game_lib(const char *path)
     }
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        throw std::runtime_error("failed to load lib");
+        throw std::runtime_error("Game Module : failed to load lib");
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        throw std::runtime_error("failed to load symbol");
+        throw std::runtime_error("Game Module : failed to load symbol");
     _libgm = _game();
 }
 
@@ -118,8 +133,21 @@ bool arcade::Core::interpret_events(std::vector<keys_e> &events) {
         if (key == ESC) {
             remove(events.begin(), events.end(), key);
             return false;
-        } else if (key == K) {
+        } else if (key == F1) {
+            remove(events.begin(), events.end(), key);
+            load_graph_lib(get_prev_lib(true).c_str());
+        } else if (key == F2) {
+            remove(events.begin(), events.end(), key);
             load_graph_lib(get_next_lib(true).c_str());
+        } else if (key == F3) {
+            remove(events.begin(), events.end(), key);
+            load_game_lib(get_prev_lib(false).c_str());
+        } else if (key == F4) {
+            remove(events.begin(), events.end(), key);
+            load_game_lib(get_next_lib(false).c_str());
+        } else if (key == R) { // FIXME: segV
+            remove(events.begin(), events.end(), key);
+            load_game_lib(_last_path_game.c_str());
         }
     }
     return true;

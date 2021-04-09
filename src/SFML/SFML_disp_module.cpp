@@ -116,6 +116,7 @@ std::vector<keys_e> SFML_display_module::pollEvent()
 {
     sf::Event ev{};
 
+    _event.clear();
     while (_win.pollEvent(ev)) {
         if (ev.type == sf::Event::Closed)
                 _win.close();

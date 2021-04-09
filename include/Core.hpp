@@ -25,6 +25,7 @@ class Core {
         ~Core();
 
         std::string get_next_lib(const bool isGraph);
+        std::string get_prev_lib(const bool isGraph);
         void load_graph_lib(const char *path);
         void load_game_lib(const char *path);
         bool do_a_frame();
@@ -42,12 +43,16 @@ class Core {
         std::unique_ptr<arcade::display::IDisplayModule> (*_graph)();
         std::unique_ptr<arcade::display::IDisplayModule> _libgr;
         void *_graph_lib;
+
         std::unique_ptr<arcade::game::IGameModule> (*_game)();
         std::unique_ptr<arcade::game::IGameModule> _libgm;
         void *_game_lib;
 
         std::chrono::time_point<std::chrono::system_clock> _now;
         std::chrono::duration<float> _elapsed_time;
+
+        std::string _last_path_graph{""};
+        std::string _last_path_game{""};
 
     private:
 };
