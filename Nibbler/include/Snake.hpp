@@ -17,7 +17,7 @@ namespace arcade::game
     class Snake {
         public:
             Snake(const size_t &nb)
-                : _size(0), _Snake(nb), _key(ARROW_RIGHT)
+                : _size(nb), _Snake(nb), _key(ARROW_RIGHT)
             {
                 std::pair<int, int> center(BOARD_SIZE / 2, BOARD_SIZE / 2);
 

@@ -108,6 +108,6 @@ bool arcade::Core::do_a_frame()
     _libgm->update(events, 0);
     _libgr->interpretCells(_libgm->getBoard());
     _libgr->refreshScreen();
-    usleep(10000000);
+    usleep(100000);
     return true;
 }
