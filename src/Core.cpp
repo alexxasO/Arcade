@@ -22,7 +22,9 @@ arcade::Core::Core(int ac, char *av[])
         "./lib/arcade_allegro5.so",
         "./lib/arcade_xlib.so",
         "./lib/arcade_gtk+.so",
-        "./lib/arcade_sfml.so" "arcade_irrlicht.so",
+        "./lib/arcade_sfml.so",
+        "./lib/arcade_sdl2.so",
+        "./lib/arcade_irrlicht.so",
         "./lib/arcade_opengl.so",
         "./lib/arcade_vulkan.so",
         "./lib/arcade_qt5.so"
@@ -36,6 +38,7 @@ arcade::Core::Core(int ac, char *av[])
     };
 
     for (const auto & entry : fs::directory_iterator("./lib")) {
+        fprintf(stderr, "file : %s\n", entry.path().c_str());
         if (std::find(_graph_libs_dict.begin(), _graph_libs_dict.end(), entry.path()) != _graph_libs_dict.end()) {
             _graph_libs.push_back(entry.path());
         }
@@ -71,6 +74,7 @@ std::string arcade::Core::get_next_lib(const bool isGraph)
     if (isGraph) {
         if (++_graph_idx >= _graph_libs.size())
             _graph_idx = 0;
+        fprintf(stderr, "idx : %ld\n_graph_libs.size :%ld\n", _graph_idx, _graph_libs.size());
         return _graph_libs[_graph_idx];
     } else {
         if (++_game_idx >= _game_libs.size())
@@ -82,6 +86,7 @@ std::string arcade::Core::get_next_lib(const bool isGraph)
 void arcade::Core::load_graph_lib(const char *path)
 {
     if (_graph_lib) {
+        _libgr.reset();
         dlclose(_graph_lib);
         _graph_lib = nullptr;
     }
@@ -96,6 +101,7 @@ void arcade::Core::load_graph_lib(const char *path)
 void arcade::Core::load_game_lib(const char *path)
 {
     if (_game_lib) {
+        _libgm.reset();
         dlclose(_game_lib);
         _game_lib = nullptr;
     }
@@ -107,11 +113,13 @@ void arcade::Core::load_game_lib(const char *path)
     _libgm = _game();
 }
 
-static bool interpret_events(std::vector<keys_e> &events) {
+bool arcade::Core::interpret_events(std::vector<keys_e> &events) {
     for (const auto & key : events) {
         if (key == ESC) {
             remove(events.begin(), events.end(), key);
             return false;
+        } else if (key == K) {
+            load_graph_lib(get_next_lib(true).c_str());
         }
     }
     return true;

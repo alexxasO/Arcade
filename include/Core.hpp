@@ -28,15 +28,16 @@ class Core {
         void load_graph_lib(const char *path);
         void load_game_lib(const char *path);
         bool do_a_frame();
+        bool interpret_events(std::vector<keys_e> &events);
 
     protected:
         std::deque<std::string> _graph_libs_dict;
         std::deque<std::string> _graph_libs;
-        int _graph_idx{0};
+        size_t _graph_idx{0};
 
         std::deque<std::string> _game_libs_dict;
         std::deque<std::string> _game_libs;
-        int _game_idx;
+        size_t _game_idx{0};
 
         std::unique_ptr<arcade::display::IDisplayModule> (*_graph)();
         std::unique_ptr<arcade::display::IDisplayModule> _libgr;
