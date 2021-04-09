@@ -25,18 +25,20 @@ class Core {
         ~Core();
 
         std::string get_next_lib(const bool isGraph);
+        std::string get_prev_lib(const bool isGraph);
         void load_graph_lib(const char *path);
         void load_game_lib(const char *path);
         bool do_a_frame();
+        bool interpret_events(std::vector<keys_e> &events);
 
     protected:
         std::deque<std::string> _graph_libs_dict;
         std::deque<std::string> _graph_libs;
-        int _graph_idx{0};
+        size_t _graph_idx{0};
 
         std::deque<std::string> _game_libs_dict;
         std::deque<std::string> _game_libs;
-        int _game_idx;
+        size_t _game_idx{0};
 
         std::unique_ptr<arcade::display::IDisplayModule> (*_graph)(){nullptr};
         std::unique_ptr<arcade::display::IDisplayModule> _libgr{nullptr};
@@ -47,6 +49,9 @@ class Core {
 
         std::chrono::time_point<std::chrono::system_clock> _now;
         std::chrono::duration<float> _elapsed_time;
+
+        std::string _last_path_graph{""};
+        std::string _last_path_game{""};
 
     private:
 };

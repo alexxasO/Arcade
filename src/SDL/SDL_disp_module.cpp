@@ -160,6 +160,7 @@ std::vector<keys_e> SDL_display_module::pollEvent()
 {
     SDL_Event ev;
 
+    _event.clear();
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT)
             std::exit(0);
