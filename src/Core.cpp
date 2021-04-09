@@ -79,9 +79,9 @@ void arcade::Core::load_graph_lib(const char *path)
     }
     _graph_lib = dlopen(path, RTLD_NOW);
     if (!_graph_lib)
-        return;
+        exit(84);
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        return;
+        exit(84);
     _libgr = _graph();
 }
 
@@ -91,11 +91,11 @@ void arcade::Core::load_game_lib(const char *path)
         dlclose(_game_lib);
         _game_lib = nullptr;
     }
-    _game_lib = dlopen(path, RTLD_NOW);
+    _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        return;
+        exit(84);
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        return;
+        exit(84);
     _libgm = _game();
 }
 
@@ -104,8 +104,10 @@ bool arcade::Core::do_a_frame()
     std::vector<keys_e> events = _libgr->pollEvent();
     // std::vector<keys_e> events = {ADD};
 
+    std::cerr << _libgm->getScore() << std::endl;
     _libgm->update(events, 0);
     _libgr->interpretCells(_libgm->getBoard());
     _libgr->refreshScreen();
+    usleep(10000000);
     return true;
 }

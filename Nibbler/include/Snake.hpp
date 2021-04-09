@@ -10,7 +10,7 @@
 
 #define BOARD_SIZE 40
 
-#include "key.hpp"
+#include "keys.hpp"
 
 namespace arcade::game
 {
@@ -26,6 +26,7 @@ namespace arcade::game
                     _Snake[i].position = {center.first - i, center.second};
                     _Snake[i].c = 'r';
                     _Snake[i].charColor = (!i ? 0xBE8AB088 : 0xBE8AB0FF);
+                    _Snake[i].bgColor = (!i ? 0xBE8AB088 : 0xBE8AB0FF);
                 }
             };
             ~Snake();

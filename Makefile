@@ -17,6 +17,7 @@ LDFLAGS = -lSDL2 -lncurses -ldl
 all: $(NAME)
 
 $(NAME): $(OBJS)
+	@make -C Nibbler/ re
 	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
 
 clean:

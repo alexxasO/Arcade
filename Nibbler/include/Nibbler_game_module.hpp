@@ -11,6 +11,7 @@
 #define BOARD_SIZE 40
 
 #include <vector>
+#include <memory>
 #include "Cell.hpp"
 #include "Fruit.hpp"
 #include "Snake.hpp"
@@ -24,7 +25,7 @@ namespace arcade::game
             ~Nibbler_game_module();
 
             /* Member functions */
-    		void update(std::vector<keys_e> &events);
+            void update(const std::vector<keys_e> &events, float elapsedTime);
             void refreshBoard();
             void reset();
 
@@ -35,8 +36,8 @@ namespace arcade::game
             void eat();
 
             /* Getters */
-            const std::vector<cell_t> &getBoard();
-    		int getScore();
+            const std::vector<cell_t> &getBoard() const;
+    		int getScore() const;
 
             /* Setters */
             bool setBoard(const std::pair<int, int> &, const cell_t &);

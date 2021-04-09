@@ -9,7 +9,7 @@
 #define FRUIT_H_
 
 #define BOARD_SIZE 40
-#define RD(x)   (rand() % (x))
+#define RD(x)   (((x) == 0) ? x : rand() % (x))
 #define RDCOLOR ((((((0xFF << 8) | RD(0x88)) << 8) | RD(0x88)) << 8) | 0xFF)
 
 namespace arcade::game
@@ -21,9 +21,10 @@ namespace arcade::game
             {
                 for (std::size_t i = 0; i != nb; i++) {
                     srand(time(NULL));
-                    _apple[i].position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
+                    _apple[i].position = {RD(BOARD_SIZE), RD(BOARD_SIZE)};
                     _apple[i].c = 'o';
                     _apple[i].charColor = RDCOLOR;
+                    _apple[i].bgColor = _apple[i].charColor;
                 }
             };
             ~Fruit();

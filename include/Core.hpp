@@ -36,11 +36,11 @@ class Core {
         std::deque<std::string> _game_libs;
         int _game_idx;
 
-        std::unique_ptr<arcade::display::IDisplayModule> (*_graph)();
-        std::unique_ptr<arcade::display::IDisplayModule> _libgr;
+        std::unique_ptr<arcade::display::IDisplayModule> (*_graph)(){nullptr};
+        std::unique_ptr<arcade::display::IDisplayModule> _libgr{nullptr};
         void *_graph_lib;
-        std::unique_ptr<arcade::game::IGameModule> (*_game)();
-        std::unique_ptr<arcade::game::IGameModule> _libgm;
+        std::unique_ptr<arcade::game::IGameModule> (*_game)(){nullptr};
+        std::unique_ptr<arcade::game::IGameModule> _libgm{nullptr};
         void *_game_lib;
 
         int _score;
