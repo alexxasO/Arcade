@@ -5,8 +5,8 @@
 ** Cell
 */
 
-#ifndef CELL_H_
-#define CELL_H_
+#ifndef CELL_T_
+#define CELL_T_
 
 #define SETRED(x, y) (x) = (((x) & ~(0xFF << 24)) | (((y) & 0xFF) << 24))
 #define SETGREEN(x, y) (x) = (((x) & ~(0xFF << 16)) | (((y) & 0xFF) << 16))

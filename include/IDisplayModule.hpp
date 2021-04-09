@@ -17,13 +17,15 @@
 #include "Cell.hpp"
 #include <map>
 
+namespace arcade {
+namespace display {
 class IDisplayModule {
     public:
         virtual ~IDisplayModule() = default;
 
 	    // Display board
 
-        virtual void interpretCells(std::vector<cell_t> &cells) = 0;
+        virtual void interpretCells(const std::vector<cell_t> &cells) = 0;
 
         // Poll event
 
@@ -32,9 +34,8 @@ class IDisplayModule {
         // Refresh frame
 
         virtual void refreshScreen() = 0;
-
-    protected:
-    private:
 };
+} // namespace display
+} // namesapce arcade
 
 #endif /* !IDISPLAYMODULE_HPP_ */

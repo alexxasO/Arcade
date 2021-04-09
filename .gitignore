@@ -4,3 +4,5 @@ vgcore*
 .idea/
 .dist/
 arcade
+*.log
+**/*.so
