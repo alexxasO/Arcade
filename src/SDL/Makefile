@@ -21,12 +21,12 @@ OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ../../include
 CXXFLAGS +=  -Wall -Wextra -fPIC
-LDFLAGS = -lSDL2 -lSDL2_ttf
+LXXFLAGS = -lSDL2 -lSDL2_ttf
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) -shared -o $(NAME) $(OBJS)
+	$(CC) -shared -o $(NAME) $(OBJS) $(LXXFLAGS)
 	mv $(NAME) ../../lib/
 
 clean:
@@ -36,5 +36,8 @@ fclean: clean
 	$(RM) ../../lib/$(NAME)
 
 re: fclean all
+
+debug: CXXFLAGS += -g3
+debug: re
 
 .PHONY: all clean fclean re

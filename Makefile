@@ -4,35 +4,39 @@ CC	= g++
 
 RM	= rm -f
 
-SRCS	= 	./src/SFML/SFML_disp_module.cpp \
-	  		./src/main.cpp			\
+SRCS	= 	./src/main.cpp			\
 	  		./src/Core.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
 CXXFLAGS +=  -Wall -Wextra -std=gnu++17
-LDFLAGS = -lSDL2 -lSDL2_ttf -lsfml-graphics -lsfml-system -lsfml-window -ldl -lncurses
+LXXFLAGS = -ldl
 
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	 $(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+	 $(CC) $(OBJS) -o $(NAME) $(LXXFLAGS)
 
 clean:
 	$(RM) $(OBJS)
 
-lib: fclean
-	make -C ./src/SDL/ re
-	make -C ./src/SFML/ re
+lib:
+	make -C ./src/SDL/
+	make -C ./src/SFML/
 
 fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
 
-debug: CXXFLAGS += -g
+lib-debug: CXXFLAGS += -g3
+lib-debug:
+	make -C ./src/SDL/ debug
+	make -C ./src/SFML/ debug
+
+debug: CXXFLAGS += -g3
 debug: re
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re lib

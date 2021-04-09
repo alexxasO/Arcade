@@ -142,9 +142,8 @@ void SFML_display_module::createWindow(const std::string &name, int flags)
 }
 
 extern "C" {
-
-std::unique_ptr<IDisplayModule> entry_point()
-{
-    return std::make_unique<SFML_display_module>();
-}
+    std::unique_ptr<arcade::display::IDisplayModule> entry_point()
+    {
+        return std::make_unique<SFML_display_module>();
+    }
 }
