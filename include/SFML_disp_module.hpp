@@ -14,8 +14,8 @@
 #include <iostream>
 
 typedef void (*draw_form)(std::pair<int, int> x, std::pair<int, int> y, sf::RenderWindow &win, sf::Color color);
-#define TILE_X 21
-#define TILE_Y 10
+#define TILE_X 10
+#define TILE_Y 21
 #define DELTA_X(x) ((x) * TILE_X)
 #define DELTA_Y(y) ((y) * TILE_Y)
 

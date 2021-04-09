@@ -12,11 +12,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <memory>
+#include <string>
 #include <iostream>
 
-typedef void (*draw_form_sdl)(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color);
-#define TILE_X 21
-#define TILE_Y 10
+typedef void (*draw_form_sdl)(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
+#define TILE_X 10
+#define TILE_Y 21
 #define DELTA_X(x) ((x) * TILE_X)
 #define DELTA_Y(y) ((y) * TILE_Y)
 
