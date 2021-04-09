@@ -28,7 +28,7 @@ namespace arcade { namespace display {
         ~SFML_display_module() override;
 
         // Interfaces
-        void interpretCells(std::vector<cell_t> &cells) override;
+        void interpretCells(const std::vector<cell_t> &cells) override;
 
         void interpretSoloCell(const cell_t &cell);
 

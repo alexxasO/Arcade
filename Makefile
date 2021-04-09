@@ -30,7 +30,7 @@ lib: fclean
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean
+re: fclean all
 
 debug: CXXFLAGS += -g
 debug: re

@@ -137,7 +137,7 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
     _form_map[cell.c](cell.position, cell.offset, _render, color);
 }
 
-void SDL_display_module::interpretCells(std::vector<cell_t> &cells)
+void SDL_display_module::interpretCells(const std::vector<cell_t> &cells)
 {
     for (auto & cell : cells) {
         interpretSoloCell(cell);
