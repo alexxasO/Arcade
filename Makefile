@@ -5,6 +5,7 @@ CC	= g++
 RM	= rm -f
 
 SRCS	= 	./src/main.cpp			\
+	  		./src/Menu.cpp			\
 	  		./src/Core.cpp			\
 
 OBJS	= $(SRCS:.cpp=.o)

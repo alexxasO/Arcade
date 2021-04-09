@@ -66,9 +66,9 @@ CC_MSG=		$(ECHO) -n $(BOLD)$(GREEN)"  [OK] "$(TEAL) ||	\
 ##
 
 title:
-	@$(ECHO) $(BOLD)$(BLUE)"        ╼┪  ─╼━━━━━━━━━━━━┷━━━━━━━━━━━━━╾─  ┢╾"		\
+	@$(ECHO) $(BOLD)$(BLUE)"        ╼┪  ─╼━━━━━━━━━━┷━━━━━━━━━━━━╾─  ┢╾"		\
 	"\n    ╼━━━┿╉    "$(DEF)$(BOLD)BUILDING $(TEAL)$(NAME)						\
-	"   "$(BOLD)$(BLUE)"╊┿━━━╾\n        ╼┩  ─╼━━━━━━━━━━━━┯━━━━━━━━━━━━━╾─  ┡╾"	\
+	"   "$(BOLD)$(BLUE)"╊┿━━━╾\n        ╼┩  ─╼━━━━━━━━━━┯━━━━━━━━━━━━╾─  ┡╾"	\
 	$(DEF)
 
 obj_title:
@@ -77,9 +77,9 @@ obj_title:
 	$(ECHO) -n $(WHITE)' '$(BLANCO)'/                  \n'$(DEF)
 
 clean_title:
-	@$(ECHO) $(BOLD)$(YELLOW)"\n        ╼┪  ─╼━━━━━━━━━━━━┷━━━━━━━━━━━━━╾─  ┢╾"		\
+	@$(ECHO) $(BOLD)$(YELLOW)"\n        ╼┪  ─╼━━━━━━━━━━┷━━━━━━━━━━━━╾─  ┢╾"		\
 	"\n    ╼━━━┿╉    "$(DEF)$(BOLD)CLEANING $(TEAL)$(NAME)							\
-	"   "$(BOLD)$(YELLOW)"╊┿━━━╾\n        ╼┩  ─╼━━━━━━━━━━━━┯━━━━━━━━━━━━━╾─  ┡╾"	\
+	"   "$(BOLD)$(YELLOW)"╊┿━━━╾\n        ╼┩  ─╼━━━━━━━━━━┯━━━━━━━━━━━━╾─  ┡╾"	\
 	"\n"$(DEF)
 
 cc_title:

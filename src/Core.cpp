@@ -37,6 +37,8 @@ arcade::Core::Core(int ac, char *av[])
         "arcade_solarfox.so"
     };
 
+    _menu.setGameList(_game_libs_dict);
+
     for (const auto & entry : fs::directory_iterator("./lib")) {
         if (std::find(_graph_libs_dict.begin(), _graph_libs_dict.end(), entry.path()) != _graph_libs_dict.end()) {
             _graph_libs.push_back(entry.path());
@@ -128,8 +130,13 @@ bool arcade::Core::do_a_frame()
     }
     _elapsed_time = std::chrono::system_clock::now() - _now;
     _now = std::chrono::system_clock::now();
-    _libgm->update(events, _elapsed_time.count());
-    _libgr->interpretCells(_libgm->getBoard());
+    if (1) {
+        _menu.update(events, _elapsed_time.count());
+        _libgr->interpretCells(_menu.getBoard());
+    } else {
+        _libgm->update(events, _elapsed_time.count());
+        _libgr->interpretCells(_libgm->getBoard());
+    }
     _libgr->refreshScreen();
     return true;
 }

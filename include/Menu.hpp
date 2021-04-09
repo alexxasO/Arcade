@@ -5,8 +5,8 @@
 ** Menu
 */
 
-#ifndef Menu_h
-#define Menu_h
+#ifndef MENU_H_
+#define MENU_H_
 
 #define BOARD_SIZE 40
 
@@ -17,36 +17,40 @@
 #include <filesystem>
 #include <dlfcn.h>
 #include <algorithm>
+#include <deque>
+#include <unistd.h>
 #include "Cell.hpp"
-#include "Fruit.hpp"
-#include "Snake.hpp"
+#include "keys.hpp"
 #include "IGameModule.hpp"
 
-class Menu : public game::IGameModule {
-    public:
-        Menu();
-        ~Menu();
+namespace arcade
+{
+    class Menu {
+        public:
+            Menu();
+            ~Menu();
 
-        /* Member functions */
-		void update(std::vector<keys_e> &events);
-        void refreshBoard();
-        void reset();
+            /* Member functions */
+    		void update(const std::vector<keys_e> &events, float elapsedTime);
+            void refreshBoard();
+            void reset();
 
-        /* Getters */
-        const std::vector<cell_t> &getBoard();
-		int getScore();
+            /* Getters */
+            const std::vector<cell_t> &getBoard();
+    		int getScore();
 
-        /* Setters */
-        bool setBoard(const std::pair<int, int> &, const cell_t &);
-		bool setScore(const int &);
-        bool setGameList();
-        void setTextOnBoard(std::pair<int, int>, std::string);
+            /* Setters */
+            bool setBoard(const std::pair<int, int> &, const cell_t &);
+    		bool setScore(const int &);
+            bool setGameList(std::deque<std::string>);
+            void setTextOnBoard(std::pair<int, int>, std::string);
 
-    protected:
-    private:
-        std::vector<cell_t> _board;
-        int _score;
-        std::map<std::size_t, std::string> _gameList;
-};
+        protected:
+        private:
+            std::vector<cell_t> _board;
+            int _score;
+            std::map<std::size_t, std::string> _gameList;
+    };
+}
 
-#endif /* !Menu_h */
+#endif /* !Menu_H_ */

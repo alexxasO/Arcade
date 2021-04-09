@@ -17,6 +17,7 @@
 #include <chrono>
 #include "IDisplayModule.hpp"
 #include "IGameModule.hpp"
+#include "Menu.hpp"
 
 namespace arcade {
 class Core {
@@ -49,6 +50,7 @@ class Core {
         std::chrono::duration<float> _elapsed_time;
 
     private:
+        arcade::Menu _menu;
 };
 }
 
