@@ -21,6 +21,7 @@ typedef void (*draw_form_sdl)(std::pair<int, int> x, std::pair<int, int> y, SDL_
 #define DELTA_Y(y) ((y) * TILE_Y)
 
 namespace arcade { namespace display {
+        std::unique_ptr<IDisplayModule> entry_point();
 class SDL_display_module : public IDisplayModule {
 public:
     // Ctor & Dtor

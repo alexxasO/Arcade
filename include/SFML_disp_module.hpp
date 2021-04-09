@@ -19,7 +19,9 @@ typedef void (*draw_form)(std::pair<int, int> x, std::pair<int, int> y, sf::Rend
 #define DELTA_X(x) ((x) * TILE_X)
 #define DELTA_Y(y) ((y) * TILE_Y)
 
-namespace arcade { namespace display {
+
+namespace arcade::display {
+    std::unique_ptr<IDisplayModule> entry_point();
     class SFML_display_module : public IDisplayModule {
     public:
         // Ctor & Dtor
@@ -127,5 +129,5 @@ namespace arcade { namespace display {
         };
     private:
     };
-} }
+}
 #endif /* !SFML_disp_module_h */
