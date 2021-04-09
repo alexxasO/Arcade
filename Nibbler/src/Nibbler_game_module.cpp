@@ -43,7 +43,8 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
             reset();
     }
     while (_timer >= frameRate) {
-        move();
+        if (!move())
+            return;
         refreshBoard();
         _timer -= frameRate;
     }
@@ -136,24 +137,32 @@ bool arcade::game::Nibbler_game_module::setScore(const int &score)
 
 void arcade::game::Nibbler_game_module::moveHorizontally(int dir)
 {
-    cell_t temp = _snake._Snake.at(0);
+    std::pair<int, int> first = _snake._Snake.begin()->position;
+    std::pair<int, int> posTemp1 = _snake._Snake.begin()->position;
+    std::pair<int, int> posTemp2 = _snake._Snake.begin()->position;
 
     _lastPos = _snake._Snake.at(_snake._size - 1);
     for (auto it = _snake._Snake.begin() + 1; it != _snake._Snake.end(); it++) {
-        it->position = {(it - 1)->position.first, (it - 1)->position.second};
+        posTemp2 = it->position;
+        it->position = {posTemp1.first, posTemp1.second};
+        posTemp1 = posTemp2;
     }
-    _snake._Snake.begin()->position = {temp.position.first + dir, temp.position.second};
+    _snake._Snake.begin()->position = {first.first + dir, first.second};
 }
 
 void arcade::game::Nibbler_game_module::moveVertically(int dir)
 {
-    cell_t temp = _snake._Snake.at(0);
+    std::pair<int, int> first = _snake._Snake.begin()->position;
+    std::pair<int, int> posTemp1 = _snake._Snake.begin()->position;
+    std::pair<int, int> posTemp2 = _snake._Snake.begin()->position;
 
     _lastPos = _snake._Snake.at(_snake._size - 1);
     for (auto it = _snake._Snake.begin() + 1; it != _snake._Snake.end(); it++) {
-        it->position = {(it - 1)->position.first, (it - 1)->position.second};
+        posTemp2 = it->position;
+        it->position = {posTemp1.first, posTemp1.second};
+        posTemp1 = posTemp2;
     }
-    _snake._Snake.begin()->position = {temp.position.first, temp.position.second + dir};
+    _snake._Snake.begin()->position = {first.first, first.second + dir};
 }
 
 bool arcade::game::Nibbler_game_module::move()
@@ -178,7 +187,7 @@ void arcade::game::Nibbler_game_module::eat()
 {
     _snake._size++;
     setScore(_fruits._score);
-    _snake._Snake.insert(_snake._Snake.end(), _lastPos);
+    _snake._Snake.push_back(_lastPos);
     _fruits._apple.begin()->position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
     fprintf(stderr, "Miam\n");
 }
