@@ -134,7 +134,13 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
         draw_text(cell, _render, color);
         return;
     }
-    _form_map[cell.c](cell.position, cell.offset, _render, color);
+    try {
+        _form_map.at(cell.c)(cell.position, cell.offset, _render, color);
+        std::cout << "reussi" << std::endl;
+    }
+    catch (const std::out_of_range& e){
+        fprintf(stderr, "%s", e.what());
+    }
 }
 
 void SDL_display_module::interpretCells(const std::vector<cell_t> &cells)
