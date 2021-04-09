@@ -1,25 +1,12 @@
-//#include "SDL_disp_module.hpp"
-#include "SFML_disp_module.hpp"
+#include "Core.hpp"
 
-int main()
+int main(int ac, char **av)
 {
-    SFML_display_module a;
-    std::vector<cell_t> cell_vect;
-
-    cell_t line_blue = {false, 'l', 0x262df7, 0xFFFFFFFF, 0.0f, std::pair<int, int>(1, 1), std::pair<int, int>(3, 3), "", ""};
-    cell_t rect_red = {false, 'r', 0xff6a34, 0xFFFFFFFF, 0.0f, std::pair<int, int>(10, 10), std::pair<int, int>(20, 20), "", ""};
-    cell_t circle_green = {false, 'o', 0x33ff36, 0xFFFFFFFF, 0.0f, std::pair<int, int>(20, 20), std::pair<int, int>(20, 20), "", ""};
-    cell_t text_c = {true, 'P', 0x33ff36, 0xFFFFFFFF, 0.0f, std::pair<int, int>(30, 30), std::pair<int, int>(20, 20), "", ""};
-//    cell_vect.push_back(line_blue);
-    cell_vect.push_back(rect_red);
-    cell_vect.push_back(circle_green);
-    cell_vect.push_back(text_c);
+    arcade::Core c(ac, av);
 
     while (1) {
-        a.interpretCells(cell_vect);
-        a.pollEvent();
-        a.refreshScreen();
-        sleep(1);
+        if (!c.do_a_frame())
+            break;
     }
     return 0;
 }
