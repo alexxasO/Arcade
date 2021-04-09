@@ -1,9 +1,14 @@
 /*
 ** EPITECH PROJECT, 2021
-** B-OOP-400-REN-4-1-arcade-killian.vallette
+** B-OOP-400-REN-4-1-arcade-arthur.jourdan
 ** File description:
 ** ILibrary
 */
+
+/**
+ * @file IDisplayModule.hpp
+ * @brief Interface class for arcade games.
+ */
 
 #ifndef IDISPLAYMODULE_HPP_
 #define IDISPLAYMODULE_HPP_
@@ -11,31 +16,38 @@
 #include <vector>
 #include <string>
 
-#include "key.hpp"
-#include "define.hpp"
-#include "unistd.h"
 #include "Cell.hpp"
-#include <map>
+#include "keys.hpp"
 
-namespace arcade {
-namespace display {
-class IDisplayModule {
-    public:
+namespace arcade
+{
+namespace display
+{
+    class IDisplayModule {
+      public:
         virtual ~IDisplayModule() = default;
 
-	    // Display board
-
+        /**
+         * @brief Method which will interpret and print a board of cells
+         *
+         * @param cells The board of cells to interpret and print
+         */
         virtual void interpretCells(const std::vector<cell_t> &cells) = 0;
 
-        // Poll event
-
+        /**
+         * @brief Method to get events caught b the current lib and his window
+         *
+         * @return The keys pressed since last call to pollEvent
+         */
         virtual std::vector<keys_e> pollEvent() = 0;
 
-        // Refresh frame
-
+        /**
+         * @brief Call all necessary functions of the library used to refresh
+         * the window
+         */
         virtual void refreshScreen() = 0;
-};
+    };
 } // namespace display
-} // namesapce arcade
+} // namespace arcade
 
 #endif /* !IDISPLAYMODULE_HPP_ */

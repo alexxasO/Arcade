@@ -22,18 +22,18 @@
 
 namespace arcade
 {
-    typedef struct cell
+    typedef struct cell_s
     {
-        bool plainChar = false; // to be displayed as a char
-        char c = ' '; // foam to display
-        uint bgColor = 0x000000FF; // RGBA
-        uint charColor = 0xFFFFFFFF; // RGBA
-        float direction = 0.0f; // degrees
-    	std::pair<int, int> position = {0, 0}; // <x, y>
-        std::pair<float, float> offset = {0.5f, 0.5f}; // <x, y>
-    	std::string imagePath; // data for image
-    	std::string soundPath; // data for sound
+        bool plainChar{false};              // to be displayed as a char
+        char c{' '};                        // foam to display
+        uint bgColor{0x000000FF};           // RGBA
+        uint charColor{0xFFFFFFFF};         // RGBA
+        float direction{0.0f};              // degrees
+        std::pair<int, int> position{0, 0}; // <x, y>
+        std::pair<float, float> offset{0.5f, 0.5f}; // <x, y>
+        std::string imagePath{};                    // data for image
+        std::string soundPath{};                    // data for sound
     } cell_t;
-}
+} // namespace arcade
 
 #endif /* !CELL_H_ */

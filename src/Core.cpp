@@ -9,6 +9,7 @@
 #include <iostream>
 #include <filesystem>
 #include <algorithm>
+#include <unistd.h>
 namespace fs = std::filesystem;
 
 arcade::Core::Core(int ac, char *av[])
@@ -72,36 +73,30 @@ std::string arcade::Core::get_next_lib(const bool isGraph)
 
 void arcade::Core::load_graph_lib(const char *path)
 {
-    fprintf(stderr, "received : %s\n", path);
     if (_graph_lib) {
         dlclose(_graph_lib);
         _graph_lib = nullptr;
     }
     _graph_lib = dlopen(path, RTLD_NOW);
-    fprintf(stderr, "after open : %p\n", _graph_lib);
     if (!_graph_lib)
         return;
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
         return;
     _libgr = _graph();
-    fprintf(stderr, "THE GRAPH : %p\n", _graph);
 }
 
 void arcade::Core::load_game_lib(const char *path)
 {
-    fprintf(stderr, "received : %s\n", path);
     if (_game_lib) {
         dlclose(_game_lib);
         _game_lib = nullptr;
     }
     _game_lib = dlopen(path, RTLD_NOW);
-    fprintf(stderr, "after open : %p\n", _game_lib);
     if (!_game_lib)
         return;
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
         return;
     _libgm = _game();
-    fprintf(stderr, "THE GAME : %p\n", _game);
 }
 
 bool arcade::Core::do_a_frame()
@@ -109,11 +104,8 @@ bool arcade::Core::do_a_frame()
     std::vector<keys_e> events = _libgr->pollEvent();
     // std::vector<keys_e> events = {ADD};
 
-    _libgm->update(events);
-    _libgm->refreshBoard();
-    const std::vector<cell_t> &_board = (_libgm->getBoard());
-    _libgr->interpretCells(_board);
+    _libgm->update(events, 0);
+    _libgr->interpretCells(_libgm->getBoard());
     _libgr->refreshScreen();
-    usleep(16);
     return true;
 }
