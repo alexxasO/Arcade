@@ -23,8 +23,8 @@ static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
     (void)y;
     rect1.x = DELTA_X(x.first);
     rect1.y = DELTA_Y(x.second);
-    rect1.h = TILE_X;
-    rect1.w = TILE_Y;
+    rect1.h = TILE_Y;
+    rect1.w = TILE_X;
 
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     SDL_RenderFillRect(render, &rect1);
@@ -47,7 +47,7 @@ static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Render
 
     (void)y;
     offset_x = 0;
-    offset_y = TILE_Y / 2;
+    offset_y = TILE_X / 2;
     d = offset_y - 1;
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     while (offset_y >= offset_x) {
@@ -126,10 +126,10 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
 {
     SDL_Color color;
 
-    color.a = GETALPHA(cell.bgColor);
-    color.r = GETRED(cell.bgColor);
-    color.g = GETGREEN(cell.bgColor);
-    color.b = GETBLUE(cell.bgColor);
+    color.a = GETALPHA(cell.charColor);
+    color.r = GETRED(cell.charColor);
+    color.g = GETGREEN(cell.charColor);
+    color.b = GETBLUE(cell.charColor);
     if (cell.plainChar) {
         draw_text(cell, _render, color);
         return;
