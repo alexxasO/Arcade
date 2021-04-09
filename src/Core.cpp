@@ -50,7 +50,7 @@ arcade::Core::Core(int ac, char *av[])
             load_game_lib("./lib/arcade_nibbler_arthur.so");
             _now = std::chrono::system_clock::now();
         } catch(const std::exception& e) {
-            std::cerr << e.what() << '\n';
+            fprintf(stderr, "%s", e.what());
             exit(84);
         }
     }
@@ -58,6 +58,8 @@ arcade::Core::Core(int ac, char *av[])
 
 arcade::Core::~Core()
 {
+    _libgr.reset();
+    _libgm.reset();
     if (_graph_lib)
         dlclose(_graph_lib);
     if (_game_lib)
@@ -105,11 +107,24 @@ void arcade::Core::load_game_lib(const char *path)
     _libgm = _game();
 }
 
+static bool interpret_events(std::vector<keys_e> &events) {
+    for (const auto & key : events) {
+        if (key == ESC) {
+            remove(events.begin(), events.end(), key);
+            return false;
+        }
+    }
+    return true;
+}
+
 bool arcade::Core::do_a_frame()
 {
     std::vector<keys_e> events = _libgr->pollEvent();
 
-    // TODO: interpret core events
+    fprintf(stderr, "lib : gr = %p, gm = %p\n", _libgr.get(), _libgm.get());
+    if (!interpret_events(events)) {
+        return false;
+    }
     _elapsed_time = std::chrono::system_clock::now() - _now;
     _now = std::chrono::system_clock::now();
     _libgm->update(events, _elapsed_time.count());
