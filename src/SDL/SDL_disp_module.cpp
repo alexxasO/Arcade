@@ -10,17 +10,18 @@
 using namespace arcade::display;
 using namespace arcade;
 
-static void draw_line(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+static void draw_line(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
-    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
-    SDL_RenderDrawLine(render, DELTA_X(x.first), DELTA_Y(x.second), DELTA_X(y.first), DELTA_Y(y.second));
+    //TODO: Draw line
+//    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
+//    SDL_RenderDrawLine(render, DELTA_X(x.first), DELTA_Y(x.second), DELTA_X(y.first), DELTA_Y(y.second));
 }
 
-static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+static void draw_rect(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     SDL_Rect rect1;
 
-    (void)y;
+    (void)color_bg;
     rect1.x = DELTA_X(x.first);
     rect1.y = DELTA_Y(x.second);
     rect1.h = TILE_Y;
@@ -30,35 +31,33 @@ static void draw_rect(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer
     SDL_RenderFillRect(render, &rect1);
 }
 
-static void draw_triangle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+static void draw_triangle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     (void)x;
-    (void)y;
     (void)render;
     (void)color;
     //TODO: Implement triangle in SLD2
 }
 
-static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Renderer *render, SDL_Color color)
+static void draw_circle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     int offset_x;
     int offset_y;
     int d;
 
-    (void)y;
     offset_x = 0;
     offset_y = TILE_X / 2;
     d = offset_y - 1;
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     while (offset_y >= offset_x) {
-        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_y, DELTA_Y(x.second) + offset_x,
-                           DELTA_X(x.first) + offset_y, DELTA_Y(x.second) + offset_x);
-        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_x, DELTA_Y(x.second) + offset_y,
-                           DELTA_X(x.first) + offset_x, DELTA_Y(x.second) + offset_y);
-        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_x, DELTA_Y(x.second) - offset_y,
-                           DELTA_X(x.first) + offset_x, DELTA_Y(x.second) - offset_y);
-        SDL_RenderDrawLine(render, DELTA_X(x.first) - offset_y, DELTA_Y(x.second) - offset_x,
-                           DELTA_X(x.first) + offset_y, DELTA_Y(x.second) - offset_x);
+        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_y, (DELTA_Y(x.second)+ TILE_Y / 2) + offset_x,
+                           (DELTA_X(x.first) + TILE_X / 2) + offset_y, (DELTA_Y(x.second) + TILE_Y / 2) + offset_x);
+        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_x, (DELTA_Y(x.second) + TILE_Y / 2) + offset_y,
+                           (DELTA_X(x.first) + TILE_X / 2) + offset_x, (DELTA_Y(x.second) + TILE_Y / 2) + offset_y);
+        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_x, (DELTA_Y(x.second) + TILE_Y / 2) - offset_y,
+                           (DELTA_X(x.first) + TILE_X / 2) + offset_x, (DELTA_Y(x.second) + TILE_Y / 2) - offset_y);
+        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_y, (DELTA_Y(x.second) + TILE_Y / 2) - offset_x,
+                           (DELTA_X(x.first) + TILE_X / 2) + offset_y, (DELTA_Y(x.second) + TILE_Y / 2) - offset_x);
         if (d >= 2 * offset_x) {
             d -= 2 * offset_x + 1;
             offset_x += 1;
@@ -73,13 +72,14 @@ static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, SDL_Render
     }
 }
 
-static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color)
+static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     TTF_Font *text = TTF_OpenFont("./my_assets/ostrich-regular.ttf", TILE_X);
     if (!text) {
         printf("ca a merde qql part %s\n", TTF_GetError());
         exit(84);
     }
+    draw_rect(cell.position, render, color_bg, SDL_Color());
     std::string mess(1, cell.c);
     SDL_Color White = {color.r, color.g, color.b, color.a};
     SDL_Surface *surfaceMessage = TTF_RenderText_Solid(text, mess.c_str(), White);
@@ -125,21 +125,28 @@ SDL_display_module::~SDL_display_module()
 void SDL_display_module::interpretSoloCell(const cell_t& cell)
 {
     SDL_Color color;
+    SDL_Color color_bg;
 
     color.a = GETALPHA(cell.charColor);
     color.r = GETRED(cell.charColor);
     color.g = GETGREEN(cell.charColor);
     color.b = GETBLUE(cell.charColor);
+    color_bg.a = GETALPHA(cell.bgColor);
+    color_bg.r = GETRED(cell.bgColor);
+    color_bg.g = GETGREEN(cell.bgColor);
+    color_bg.b = GETBLUE(cell.bgColor);
     if (cell.plainChar) {
-        draw_text(cell, _render, color);
+        draw_text(cell, _render, color, color_bg);
+        return;
+    }
+    if (cell.c == ' ') {
+        _form_map.at(cell.c)(cell.position, _render, color_bg, color);
         return;
     }
     try {
-        _form_map.at(cell.c)(cell.position, cell.offset, _render, color);
+        _form_map.at(cell.c)(cell.position, _render, color, color_bg);
     }
-    catch (const std::out_of_range& e){
-
-    }
+    catch (const std::out_of_range& e){}
 }
 
 void SDL_display_module::interpretCells(const std::vector<cell_t> &cells)
