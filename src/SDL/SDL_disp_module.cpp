@@ -136,10 +136,9 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
     }
     try {
         _form_map.at(cell.c)(cell.position, cell.offset, _render, color);
-        std::cout << "reussi" << std::endl;
     }
     catch (const std::out_of_range& e){
-        fprintf(stderr, "%s", e.what());
+
     }
 }
 
@@ -157,8 +156,10 @@ std::vector<keys_e> SDL_display_module::pollEvent()
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT)
             std::exit(0);
-        if (_key_map[ev.type])
-            _event.push_back(_key_map[ev.type]);
+        if (ev.type == SDL_KEYDOWN) {
+            if (_key_map[ev.key.keysym.sym])
+                _event.push_back(_key_map[ev.key.keysym.sym]);
+        }
     }
     return _event;
 }

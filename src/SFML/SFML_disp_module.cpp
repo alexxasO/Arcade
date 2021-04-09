@@ -99,9 +99,7 @@ void SFML_display_module::interpretSoloCell(const cell_t& cell)
     }
     try {
         _form_map.at(cell.c)(cell.position, cell.offset, _win, color);
-        std::cout << "reussi" << std::endl;
     } catch (const std::out_of_range& e){
-        fprintf(stderr, "%s", e.what());
     }
 
 
