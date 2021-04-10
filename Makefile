@@ -27,6 +27,7 @@ clean:
 lib:
 	make -C ./src/SDL/
 	make -C ./src/SFML/
+	make -C ./src/NCURSES/
 
 fclean: clean
 	$(RM) $(NAME)
@@ -37,6 +38,7 @@ lib-debug: CXXFLAGS += -g3
 lib-debug:
 	make -C ./src/SDL/ debug
 	make -C ./src/SFML/ debug
+	make -C ./src/NCURSES/ debug
 
 debug: CXXFLAGS += -g3
 debug: re
