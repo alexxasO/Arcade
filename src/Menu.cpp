@@ -10,22 +10,7 @@
 arcade::Menu::Menu()
     : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0)
 {
-    std::size_t move = 0;
-
-    for (std::size_t i = 0; i != BOARD_SIZE; i++) {
-        for (std::size_t j = 0; j != BOARD_SIZE; j++) {
-            _board[move].position = {i, j};
-            if (!i || i == BOARD_SIZE - 1) {
-                _board[move].c = '|';
-                _board[move].charColor = 0xFFFF88FF;
-            }
-            if (!j || j == BOARD_SIZE - 1) {
-                _board[move].c = '-';
-                _board[move].charColor = 0xFFFF88FF;
-            }
-            move++;
-        }
-    }
+    initBoard();
 }
 
 arcade::Menu::~Menu()
@@ -34,11 +19,35 @@ arcade::Menu::~Menu()
 
 // MEMBER FUNCTIONS
 
+void arcade::Menu::initBoard()
+{
+    std::size_t move = 0;
+    arcade::cell_t newCell;
+
+    for (std::size_t i = 0; i != BOARD_SIZE; i++) {
+        for (std::size_t j = 0; j != BOARD_SIZE; j++) {
+            _board[move] = newCell;
+            _board[move].position = {i, j};
+            _board[move].c = ' ';
+            _board[move].charColor = 0x000000FF;
+            _board[move].bgColor = 0x000000FF;
+            if (!i || i == BOARD_SIZE - 1) {
+                _board[move].c = 'r';
+                _board[move].charColor = 0xFF0000FF;
+            }
+            if (!j || j == BOARD_SIZE - 1) {
+                _board[move].c = 'r';
+                _board[move].charColor = 0xFF0000FF;
+            }
+            move++;
+        }
+    }
+}
+
 std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, float elapsedTime, const std::size_t &score)
 {
     float frameRate = 0.1;
 
-    fprintf(stderr, "(timer = %f, elapse = %f)\n", _timer, elapsedTime);
     for (auto it = events.begin(); it != events.end(); it++) {
         if (*it == NUM_1 || *it == NUM_2 || *it == NUM_3 ||
             *it == NUM_4 || *it == NUM_5 || *it == NUM_6 ||
@@ -58,14 +67,25 @@ std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, floa
 
 void arcade::Menu::refreshBoard(const std::size_t &score)
 {
-    std::pair<int, int> pos(2, BOARD_SIZE / 2);
+    std::pair<int, int> pos(5, 16);
+    std::pair<int, int> pos2(5, 30);
 
-    setTextOnBoard({2, 2}, "ARCADE");
-    setTextOnBoard({2, 5}, "score = " + std::to_string(score));
-    setTextOnBoard({2, 15}, "Select a game");
+    initBoard();
+    setTextOnBoard({17, 2}, "ARCADE");
+    setTextOnBoard({15, 4}, "score = " + std::to_string(score));
+    setTextOnBoard({1, 6}, "--------------------------------------");
+    setTextOnBoard({2, 8}, "Enter your name: press <Enter>");
+    setTextOnBoard({5, 10}, "_______________");
+    setTextOnBoard({1, 12}, "--------------------------------------");
+    setTextOnBoard({12, 14}, "Select a game");
     for (auto lst : _gameList) {
-        setTextOnBoard({pos.first, pos.second += 2},
-                        lst.second + " " + std::to_string(lst.first));
+        setTextOnBoard({pos.first, pos.second++},
+                        lst.second + ": press <" + std::to_string(lst.first) + ">");
+    }
+    setTextOnBoard({1, 26}, "--------------------------------------");
+    setTextOnBoard({8, 28}, "List of graphic libraries:");
+    for (auto lst : _graphList) {
+        setTextOnBoard({pos2.first, pos2.second++}, "- " + lst);
     }
 }
 
@@ -111,7 +131,8 @@ bool arcade::Menu::setScore(const int &score)
     return true;
 }
 
-bool arcade::Menu::setGameList(const std::deque<std::string> &gameList)
+bool arcade::Menu::setGameList(const std::deque<std::string> &gameList,
+                               const std::deque<std::string> &graphList)
 {
     bool flag = false;
     std::string path("./lib");
@@ -119,16 +140,19 @@ bool arcade::Menu::setGameList(const std::deque<std::string> &gameList)
     std::pair<int, int> idx(0, 1);
     std::vector<std::string> strings;
 
-    for (const auto &entry : std::filesystem::directory_iterator(path)) {
-        temp = (entry.path().c_str() + 6);
+    for (auto lst : gameList) {
+        temp = (lst.c_str() + 13);
         if ((idx.first = temp.find(".so"))) {
-            for (auto lst : gameList) {
-                if (lst == temp) {
-                    _gameList[idx.second] = temp.erase(idx.first, 3);
-                    fprintf(stderr, "> str = %s\n", _gameList[idx.second].c_str());
-                    idx.second++;
-                }
-            }
+            _gameList[idx.second] = temp.erase(idx.first, 3);
+            idx.second++;
+        }
+    }
+    idx = {0, 1};
+    for (auto lst : graphList) {
+        fprintf(stderr, "%s\n", lst.c_str());
+        temp = (lst.c_str() + 13);
+        if ((idx.first = temp.find(".so"))) {
+            _graphList.push_back(temp.erase(idx.first, 3));
         }
     }
     return flag;
@@ -141,6 +165,7 @@ void arcade::Menu::setTextOnBoard(std::pair<int, int> pos, std::string str)
             if (cell.position.first == (pos.first + (int)i) &&
                 cell.position.second == pos.second) {
                 cell.c = str[i];
+                cell.charColor = 0xFFFFFFFF;
                 cell.plainChar = true;
             }
         }

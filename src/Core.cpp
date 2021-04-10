@@ -15,7 +15,7 @@
 namespace fs = std::filesystem;
 
 arcade::Core::Core(int ac, char *av[])
-: _graph_idx(0), _game_idx(0), _graph_lib(nullptr), _game_lib(nullptr)
+: _graph_idx(0), _game_idx(0), _graph_lib(nullptr), _game_lib(nullptr), _score(0)
 {
     _graph_libs_dict = {
         "./lib/arcade_ndk++.so",
@@ -40,8 +40,6 @@ arcade::Core::Core(int ac, char *av[])
         "./lib/arcade_solarfox.so"
     };
 
-    _menu.setGameList(_game_libs_dict);
-
     for (const auto & entry : fs::directory_iterator("./lib")) {
         if (std::find(_graph_libs_dict.begin(), _graph_libs_dict.end(), entry.path()) != _graph_libs_dict.end()) {
             _graph_libs.push_back(entry.path());
@@ -50,6 +48,8 @@ arcade::Core::Core(int ac, char *av[])
             _game_libs.push_back(entry.path());
         }
     }
+
+    _menu.setGameList(_game_libs, _graph_libs);
 
     if (ac == 2) {
         try {

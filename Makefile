@@ -18,7 +18,7 @@ LXXFLAGS = -ldl
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@make -C Nibbler/ re
+	make -C Nibbler/
 	$(CC) $(OBJS) -o $(NAME) $(LXXFLAGS) $(LDFLAGS)
 
 clean:

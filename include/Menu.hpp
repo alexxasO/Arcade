@@ -36,6 +36,7 @@ namespace arcade
                                const std::size_t &);
             void refreshBoard(const std::size_t &);
             void reset();
+            void initBoard();
 
             /* Getters */
             const std::vector<cell_t> &getBoard();
@@ -44,7 +45,7 @@ namespace arcade
             /* Setters */
             bool setBoard(const std::pair<int, int> &, const cell_t &);
     		bool setScore(const int &);
-            bool setGameList(const std::deque<std::string> &);
+            bool setGameList(const std::deque<std::string> &, const std::deque<std::string> &);
             void setTextOnBoard(std::pair<int, int>, std::string);
 
         protected:
@@ -52,6 +53,7 @@ namespace arcade
             std::vector<cell_t> _board;
             int _score;
             std::map<std::size_t, std::string> _gameList;
+            std::deque<std::string> _graphList;
             float _timer;
     };
 }
