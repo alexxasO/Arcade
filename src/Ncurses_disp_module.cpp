@@ -20,7 +20,7 @@ static void place_char(char c, int x, int y, color_t &color)
     attroff(COLOR_PAIR(col));
 }
 
-static void draw_circle(const cell_t &cell, color_t &color)
+static void draw_circle(const arcade::cell_t &cell, color_t &color)
 {
     place_char('o', cell.position.first, cell.position.second, color);
 }
@@ -38,7 +38,7 @@ static void draw_line2(std::pair<int, int> coord, std::pair<int, int> coord2, co
     }
 }
 
-static void draw_line(const cell_t &cell, color_t &color)
+static void draw_line(const arcade::cell_t &cell, color_t &color)
 {
     std::pair<int, int> x = cell.position;
     std::pair<int, int> y = cell.offset;
@@ -53,17 +53,17 @@ static void draw_line(const cell_t &cell, color_t &color)
         draw_line2(x, y, color);
 }
 
-static void draw_char(const cell_t &cell, color_t &color)
+static void draw_char(const arcade::cell_t &cell, color_t &color)
 {
     place_char(cell.c, cell.position.first, cell.position.second, color);
 }
 
-static void draw_rect(const cell_t &cell, color_t &color)
+static void draw_rect(const arcade::cell_t &cell, color_t &color)
 {
     place_char('#', cell.position.first, cell.position.second, color);
 }
 
-Ncurses_disp_module::Ncurses_disp_module()
+arcade::display::Ncurses_disp_module::Ncurses_disp_module()
 {
     _main_win = initscr();
     if (has_colors() == FALSE) {
@@ -93,12 +93,12 @@ Ncurses_disp_module::Ncurses_disp_module()
     _maxy = getmaxy(_main_win);
 }
 
-Ncurses_disp_module::~Ncurses_disp_module()
+arcade::display::Ncurses_disp_module::~Ncurses_disp_module()
 {
     endwin();
 }
 
-void Ncurses_disp_module::interpret_cell(const cell_t &cell)
+void arcade::display::Ncurses_disp_module::interpret_cell(const arcade::cell_t &cell)
 {
     color_t color = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -122,21 +122,21 @@ void Ncurses_disp_module::interpret_cell(const cell_t &cell)
     _nextPairID = color.pairID;
 }
 
-void Ncurses_disp_module::interpretCells(std::vector<cell_t> &cells)
+void arcade::display::Ncurses_disp_module::interpretCells(std::vector<arcade::cell_t> &cells)
 {
     for (auto & cell : cells) {
         interpret_cell(cell);
     }
 }
 
-void Ncurses_disp_module::refreshScreen()
+void arcade::display::Ncurses_disp_module::refreshScreen()
 {
     if (refresh() == ERR) {
         fprintf(stderr, "ncurses refresh error\n");
     }
 }
 
-std::vector<keys_e> Ncurses_disp_module::pollEvent()
+std::vector<arcade::keys_e> arcade::display::Ncurses_disp_module::pollEvent()
 {
     std::vector<keys_e> vec = {UNKNOWN};
 
