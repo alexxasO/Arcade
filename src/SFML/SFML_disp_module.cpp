@@ -43,10 +43,10 @@ static void draw_triangle(std::pair<int, int> x, std::pair<int, int> y, sf::Rend
 
 static void draw_circle(std::pair<int, int> x, std::pair<int, int> y, sf::RenderWindow &win, sf::Color color)
 {
-    sf::CircleShape circle((float)TILE_Y / 2);
+    sf::CircleShape circle((float)TILE_X / 2);
 
     (void)y;
-    circle.setPosition(sf::Vector2f(DELTA_X(x.first), DELTA_Y(x.second)));
+    circle.setPosition(sf::Vector2f(DELTA_X(x.first), DELTA_Y(x.second) + (TILE_Y / 3)));
     circle.setFillColor(color);
     win.draw(circle);
 }
@@ -56,7 +56,7 @@ static void draw_text(const cell_t &cell, sf::RenderWindow &win, sf::Color color
     sf::Text text;
     sf::Font font;
 
-    if (!font.loadFromFile("./my_assets/ostrich-regular.ttf")) {
+    if (!font.loadFromFile("./assets/font/consolab.ttf")) {
         printf("ca a merde qql part %s\n", "font");
         exit(84);
     }
