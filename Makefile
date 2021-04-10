@@ -10,15 +10,17 @@ SRCS	= 	./src/main.cpp			\
 OBJS	= $(SRCS:.cpp=.o)
 
 CXXFLAGS = -I ./include
-CXXFLAGS +=  -Wall -Wextra -std=gnu++17
+CXXFLAGS +=  -Wall -Wextra -std=gnu++17 -Wl,-rpath=.
 LXXFLAGS = -ldl
 
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@make -C Nibbler/ re
 	$(CC) $(OBJS) -o $(NAME) $(LXXFLAGS) $(LDFLAGS)
+
+nibbler:
+	@make -C Nibbler/ re
 
 clean:
 	$(RM) $(OBJS)

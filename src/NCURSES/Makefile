@@ -16,6 +16,7 @@ RM	= rm -f
 SRCDIR = ./
 
 SRCS	=	$(SRCDIR)Ncurses_disp_module.cpp	\
+			$(SRCDIR)ncurses_color.cpp
 
 OBJS	= $(SRCS:.cpp=.o)
 
