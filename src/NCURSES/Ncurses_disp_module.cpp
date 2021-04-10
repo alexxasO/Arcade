@@ -25,6 +25,11 @@ static void draw_circle(const arcade::cell_t &cell, color_t &color)
     place_char('o', cell.position.first, cell.position.second, color);
 }
 
+static void draw_triangle(const arcade::cell_t &cell, color_t &color)
+{
+    place_char('v', cell.position.first, cell.position.second, color);
+}
+
 static void draw_line2(std::pair<int, int> coord, std::pair<int, int> coord2, color_t color)
 {
     int x;
@@ -88,7 +93,9 @@ arcade::display::Ncurses_disp_module::Ncurses_disp_module()
     _nextPairID = 1;
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
+    _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
+    _form_map[' '] = &draw_rect;
     _maxx = getmaxx(_main_win);
     _maxy = getmaxy(_main_win);
 }
@@ -122,7 +129,7 @@ void arcade::display::Ncurses_disp_module::interpret_cell(const arcade::cell_t &
     _nextPairID = color.pairID;
 }
 
-void arcade::display::Ncurses_disp_module::interpretCells(std::vector<arcade::cell_t> &cells)
+void arcade::display::Ncurses_disp_module::interpretCells(const std::vector<cell_t> &cells)
 {
     for (auto & cell : cells) {
         interpret_cell(cell);
