@@ -29,7 +29,8 @@ arcade::Core::Core(int ac, char *av[])
         "./lib/arcade_irrlicht.so",
         "./lib/arcade_opengl.so",
         "./lib/arcade_vulkan.so",
-        "./lib/arcade_qt5.so"
+        "./lib/arcade_qt5.so",
+        "./lib/arcade_ncurses.so"
     };
     _game_libs_dict = {
         "./lib/arcade_nibbler.so",
@@ -105,11 +106,11 @@ void arcade::Core::load_graph_lib(const char *path)
         dlclose(_graph_lib);
         _graph_lib = nullptr;
     }
-    _graph_lib = dlopen(path, RTLD_LAZY);
+    _graph_lib = dlopen(path, RTLD_NOW);
     if (!_graph_lib)
-        throw std::runtime_error("Display Module : failed to load lib");
+        throw std::runtime_error("Display Module : failed to load lib : " + std::string(path) + "\n");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        throw std::runtime_error("Display Module : failed to load symbol");
+        throw std::runtime_error("Display Module : failed to load symbol\n");
     _libgr = _graph();
 }
 
@@ -124,9 +125,9 @@ void arcade::Core::load_game_lib(const char *path)
     }
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        throw std::runtime_error("Game Module : failed to load lib");
+        throw std::runtime_error("Game Module : failed to load lib : " + std::string(path) + "\n");
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        throw std::runtime_error("Game Module : failed to load symbol");
+        throw std::runtime_error("Game Module : failed to load symbol\n");
     _libgm = _game();
 }
 

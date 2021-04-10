@@ -7,10 +7,11 @@
 
 #include "Ncurses_disp_module.hpp"
 #include "tools.hpp"
+#include <memory>
 
 static void place_char(char c, int x, int y, color_t &color)
 {
-    int col = ncurses_init_new_color(color);
+    int col = -1;
     if (col < 0) {
         mvaddch(y, x, c);
         return;
@@ -68,6 +69,11 @@ static void draw_rect(const arcade::cell_t &cell, color_t &color)
     place_char('#', cell.position.first, cell.position.second, color);
 }
 
+static void draw_space(const arcade::cell_t &cell, color_t &color)
+{
+    place_char(' ', cell.position.first, cell.position.second, color);
+}
+
 arcade::display::Ncurses_disp_module::Ncurses_disp_module()
 {
     _main_win = initscr();
@@ -77,6 +83,7 @@ arcade::display::Ncurses_disp_module::Ncurses_disp_module()
         exit(1);
     }
     start_color();
+    nodelay(_main_win, TRUE);
     if (!_main_win)
         fprintf(stderr, "ncurses initscr error\n");
     if (cbreak() == ERR) {
@@ -95,7 +102,7 @@ arcade::display::Ncurses_disp_module::Ncurses_disp_module()
     _form_map['l'] = &draw_line;
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
-    _form_map[' '] = &draw_rect;
+    _form_map[' '] = &draw_space;
     _maxx = getmaxx(_main_win);
     _maxy = getmaxy(_main_win);
 }
@@ -145,7 +152,38 @@ void arcade::display::Ncurses_disp_module::refreshScreen()
 
 std::vector<arcade::keys_e> arcade::display::Ncurses_disp_module::pollEvent()
 {
-    std::vector<keys_e> vec = {UNKNOWN};
+    std::vector<keys_e> vec{};
+    int ch = getch();
+
+    if (ch) {
+        if (ch == ERR) {
+            return vec;
+        }
+        vec.push_back(_keymap[ch]);
+    }
 
     return vec;
+}
+
+// std::vector<keys_e> SFML_display_module::pollEvent()
+// {
+//     sf::Event ev{};
+
+//     _event.clear();
+//     while (_win.pollEvent(ev)) {
+//         if (ev.type == sf::Event::Closed)
+//                 _win.close();
+//         if (ev.type == sf::Event::KeyPressed) {
+//             if (_key_map[ev.key.code])
+//                 _event.push_back(_key_map[ev.key.code]);
+//         }
+//     }
+//     return _event;
+// }
+
+extern "C" {
+    std::unique_ptr<arcade::display::IDisplayModule> entry_point()
+    {
+        return std::make_unique<arcade::display::Ncurses_disp_module>();
+    }
 }
