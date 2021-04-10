@@ -106,7 +106,7 @@ void arcade::Core::load_graph_lib(const char *path)
         dlclose(_graph_lib);
         _graph_lib = nullptr;
     }
-    _graph_lib = dlopen(path, RTLD_NOW);
+    _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
         throw std::runtime_error("Display Module : failed to load lib : " + std::string(path) + "\n");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)

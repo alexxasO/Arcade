@@ -11,6 +11,7 @@
 #include <curses.h>
 #include <vector>
 #include <map>
+#include <memory>
 #include "IDisplayModule.hpp"
 
 typedef struct color_s
@@ -139,6 +140,7 @@ namespace arcade::display {
     };
 }
 
-int ncurses_init_new_color(color_t &color);
+int find_color_pair(const color_t &col);
+void init_pairs_arcade();
 
 #endif /* !Ncurses_disp_module_h */
