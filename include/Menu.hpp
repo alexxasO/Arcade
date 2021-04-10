@@ -31,8 +31,10 @@ namespace arcade
             ~Menu();
 
             /* Member functions */
-    		void update(const std::vector<keys_e> &events, float elapsedTime);
-            void refreshBoard();
+    		std::string update(const std::vector<keys_e> &events,
+                               float elapsedTime,
+                               const std::size_t &);
+            void refreshBoard(const std::size_t &);
             void reset();
 
             /* Getters */
@@ -42,7 +44,7 @@ namespace arcade
             /* Setters */
             bool setBoard(const std::pair<int, int> &, const cell_t &);
     		bool setScore(const int &);
-            bool setGameList(std::deque<std::string>);
+            bool setGameList(const std::deque<std::string> &);
             void setTextOnBoard(std::pair<int, int>, std::string);
 
         protected:
@@ -50,6 +52,7 @@ namespace arcade
             std::vector<cell_t> _board;
             int _score;
             std::map<std::size_t, std::string> _gameList;
+            float _timer;
     };
 }
 

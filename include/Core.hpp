@@ -51,6 +51,7 @@ class Core {
 
     private:
         arcade::Menu _menu;
+        std::size_t _score;
 };
 }
 

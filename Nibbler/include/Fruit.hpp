@@ -21,10 +21,9 @@ namespace arcade::game
             {
                 for (std::size_t i = 0; i != nb; i++) {
                     srand(time(NULL));
-                    _apple[i].position = {RD(BOARD_SIZE), RD(BOARD_SIZE)};
+                    _apple[i].position = {RD((BOARD_SIZE - 2)) + 1, RD((BOARD_SIZE - 2)) + 1};
                     _apple[i].c = 'o';
                     _apple[i].charColor = RDCOLOR;
-                    _apple[i].bgColor = _apple[i].charColor;
                 }
             };
             ~Fruit();

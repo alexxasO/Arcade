@@ -10,14 +10,7 @@
 arcade::game::Nibbler_game_module::Nibbler_game_module()
     : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _snake(4), _fruits(1), _timer(0)
 {
-    std::size_t move = 0;
-
-    for (std::size_t i = 0; i != BOARD_SIZE; i++) {
-        for (std::size_t j = 0; j != BOARD_SIZE; j++) {
-            _board[move].position = {i, j};
-            move++;
-        }
-    }
+    initBoard();
 }
 
 arcade::game::Nibbler_game_module::~Nibbler_game_module()
@@ -25,6 +18,30 @@ arcade::game::Nibbler_game_module::~Nibbler_game_module()
 }
 
 // MEMBER FUNCTIONS
+
+void arcade::game::Nibbler_game_module::initBoard()
+{
+    std::size_t move = 0;
+    arcade::cell_t newCell;
+
+    for (std::size_t i = 0; i != BOARD_SIZE; i++) {
+        for (std::size_t j = 0; j != BOARD_SIZE; j++) {
+            _board[move] = newCell;
+            _board[move].position = {i, j};
+            _board[move].c = ' ';
+            _board[move].charColor = ' ';
+            if (!i || i == BOARD_SIZE - 1) {
+                _board[move].c = 'r';
+                _board[move].charColor = 0xFF0000FF;
+            }
+            if (!j || j == BOARD_SIZE - 1) {
+                _board[move].c = 'r';
+                _board[move].charColor = 0xFF0000FF;
+            }
+            move++;
+        }
+    }
+}
 
 void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events, float elapsedTime)
 {
@@ -39,8 +56,6 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
             _snake._key = *it;
         else if (*it == ARROW_RIGHT && _snake._key != ARROW_LEFT)
             _snake._key = *it;
-        if (*it == R)
-            reset();
     }
     while (_timer >= frameRate) {
         if (!move())
@@ -54,11 +69,8 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
 
 void arcade::game::Nibbler_game_module::refreshBoard()
 {
-    arcade::cell_t newCell;
-
+    initBoard();
     for (auto &cell : _board) {
-        newCell.position = cell.position;
-        cell = newCell;
         for (auto &food : _fruits._apple) {
             if (food.position.first == cell.position.first &&
                 food.position.second == cell.position.second) {
@@ -66,10 +78,13 @@ void arcade::game::Nibbler_game_module::refreshBoard()
             }
         }
         if (_snake._Snake.begin()->position == cell.position) {
-            if (cell.c == 'o')
+            if (cell.c == 'o') {
                 eat();
-            if (cell.c == 'r')
-                fprintf(stderr, "Game over\n");
+            }
+            if (cell.c == 'r') {
+                // reset();
+                // return;
+            }
         }
         for (auto &snake : _snake._Snake) {
             if (snake.position.first == cell.position.first &&
@@ -87,16 +102,11 @@ void arcade::game::Nibbler_game_module::reset()
     Fruit newFruits(1);
     std::size_t move = 0;
 
-    for (std::size_t i = 0; i != BOARD_SIZE; i++) {
-        for (std::size_t j = 0; j != BOARD_SIZE; j++) {
-            _board[move].position = {i, j};
-            move++;
-        }
-    }
     _score = 0;
     _board = newBoard;
     _snake = newSnake;
     _fruits = newFruits;
+    initBoard();
 }
 
 // GETTERS
@@ -185,10 +195,20 @@ bool arcade::game::Nibbler_game_module::move()
 
 void arcade::game::Nibbler_game_module::eat()
 {
+    std::pair<int, int> pos;
+    bool found = false;
+
     _snake._size++;
     setScore(_fruits._score);
     _snake._Snake.push_back(_lastPos);
-    _fruits._apple.begin()->position = {rand() % BOARD_SIZE, rand() % BOARD_SIZE};
+    while (!found) {
+        pos = {BLIM, BLIM};
+        for (auto cell : _board) {
+            if (cell.position == pos && cell.c == ' ')
+                found = true;
+        }
+    }
+    _fruits._apple.begin()->position = pos;
     fprintf(stderr, "Miam\n");
 }
 

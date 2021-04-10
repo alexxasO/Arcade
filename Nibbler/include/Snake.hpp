@@ -22,11 +22,9 @@ namespace arcade::game
                 std::pair<int, int> center(BOARD_SIZE / 2, BOARD_SIZE / 2);
 
                 for (std::size_t i = 0; i != nb; i++) {
-                    srand(time(NULL));
                     _Snake[i].position = {center.first - i, center.second};
-                    _Snake[i].c = (!i ? 'o' : 'r');
+                    _Snake[i].c = 'r';
                     _Snake[i].charColor = (!i ? 0xBE8AB088 : 0xBE8AB0FF);
-                    _Snake[i].bgColor = 0x0000000000;
                 }
             };
             ~Snake();

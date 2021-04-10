@@ -124,16 +124,18 @@ static bool interpret_events(std::vector<arcade::keys_e> &events) {
 bool arcade::Core::do_a_frame()
 {
     std::vector<keys_e> events = _libgr->pollEvent();
+    std::string eventString("menu");
 
     if (!interpret_events(events)) {
         return false;
     }
     _elapsed_time = std::chrono::system_clock::now() - _now;
     _now = std::chrono::system_clock::now();
-    if (1) {
-        _menu.update(events, _elapsed_time.count());
+    if (eventString == "menu") {
+        eventString = _menu.update(events, _elapsed_time.count(), _score);
         _libgr->interpretCells(_menu.getBoard());
     } else {
+        _score = _libgm->getScore();
         _libgm->update(events, _elapsed_time.count());
         _libgr->interpretCells(_libgm->getBoard());
     }
