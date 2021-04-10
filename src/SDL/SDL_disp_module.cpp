@@ -74,7 +74,7 @@ static void draw_circle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color c
 
 static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
-    TTF_Font *text = TTF_OpenFont("./my_assets/ostrich-regular.ttf", TILE_X);
+    TTF_Font *text = TTF_OpenFont("./assets/font/consolab.ttf", TILE_X);
     if (!text) {
         printf("ca a merde qql part %s\n", TTF_GetError());
         exit(84);
