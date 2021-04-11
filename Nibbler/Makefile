@@ -31,7 +31,7 @@ clean: clean_title
 	$(CLEAN_MSG)
 
 fclean:	clean
-	@$(RM) $(NAME)
+	@$(RM) ../lib/$(NAME)
 	$(FCLEAN_MSG)
 
 re:	fclean all
