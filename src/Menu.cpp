@@ -8,7 +8,7 @@
 #include "Menu.hpp"
 
 arcade::Menu::Menu()
-    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0)
+    : _typing(false), _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _game("menu")
 {
     initBoard();
 }
@@ -35,7 +35,7 @@ void arcade::Menu::initBoard()
                 _board[move].c = 'r';
                 _board[move].charColor = 0xFF0000FF;
             }
-            if (!j || j == BOARD_SIZE - 1) {
+            if (!j || j == BOARD_SIZE - 1 || j == 6 || j == 12 || j == 26) {
                 _board[move].c = 'r';
                 _board[move].charColor = 0xFF0000FF;
             }
@@ -49,11 +49,30 @@ std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, floa
     float frameRate = 0.1;
 
     for (auto it = events.begin(); it != events.end(); it++) {
-        if (*it == NUM_1 || *it == NUM_2 || *it == NUM_3 ||
-            *it == NUM_4 || *it == NUM_5 || *it == NUM_6 ||
-            *it == NUM_7 || *it == NUM_8 || *it == NUM_9) {
-            fprintf(stderr, "game %s has been launched\n", _gameList[*it].c_str());
-            return _gameList[*it].c_str();
+        if (_typing) {
+            if (*it == ESC || *it == DEL) {
+                _name = "";
+                _typing = false;
+            }
+            if (*it >= 45 && *it <= 70)
+                _name += (*it + '4');
+            if (*it == RETURN)
+                _typing = false;
+        } else {
+            if (*it == NUM_1 || *it == NUM_2 || *it == NUM_3 ||
+                *it == NUM_4 || *it == NUM_5 || *it == NUM_6 ||
+                *it == NUM_7 || *it == NUM_8 || *it == NUM_9) {
+                for (auto lst : _gameList) {
+                    if ((std::size_t)(*it - 23) == lst.first) {
+                        fprintf(stderr, "game %s has been launched\n", lst.second.c_str());
+                        _game = lst.second.c_str();
+                    }
+                }
+            }
+            if (*it == T) {
+                _name = " ";
+                _typing = true;
+            }
         }
     }
     while (_timer >= frameRate) {
@@ -62,7 +81,7 @@ std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, floa
     }
     if (_timer < frameRate)
         _timer += elapsedTime;
-    return "menu";
+    return _game;
 }
 
 void arcade::Menu::refreshBoard(const std::size_t &score)
@@ -73,16 +92,16 @@ void arcade::Menu::refreshBoard(const std::size_t &score)
     initBoard();
     setTextOnBoard({17, 2}, "ARCADE");
     setTextOnBoard({15, 4}, "score = " + std::to_string(score));
-    setTextOnBoard({1, 6}, "--------------------------------------");
-    setTextOnBoard({2, 8}, "Enter your name: press <Enter>");
-    setTextOnBoard({5, 10}, "_______________");
-    setTextOnBoard({1, 12}, "--------------------------------------");
+    // setTextOnBoard({1, 6}, "--------------------------------------");
+    setTextOnBoard({2, 8}, "Enter your name: press <T>");
+    setTextOnBoard({5, 10}, ((_name != "") ? _name : "_______________"));
+    // setTextOnBoard({1, 12}, "--------------------------------------");
     setTextOnBoard({12, 14}, "Select a game");
     for (auto lst : _gameList) {
         setTextOnBoard({pos.first, pos.second++},
                         lst.second + ": press <" + std::to_string(lst.first) + ">");
     }
-    setTextOnBoard({1, 26}, "--------------------------------------");
+    // setTextOnBoard({1, 26}, "--------------------------------------");
     setTextOnBoard({8, 28}, "List of graphic libraries:");
     for (auto lst : _graphList) {
         setTextOnBoard({pos2.first, pos2.second++}, "- " + lst);
@@ -107,6 +126,12 @@ const std::vector<arcade::cell_t> &arcade::Menu::getBoard()
 int arcade::Menu::getScore()
 {
     return _score;
+}
+
+
+std::string arcade::Menu::getGame()
+{
+    return _game;
 }
 
 // SETTERS
@@ -155,6 +180,7 @@ bool arcade::Menu::setGameList(const std::deque<std::string> &gameList,
             _graphList.push_back(temp.erase(idx.first, 3));
         }
     }
+
     return flag;
 }
 

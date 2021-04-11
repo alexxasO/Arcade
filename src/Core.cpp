@@ -150,7 +150,7 @@ bool arcade::Core::interpret_events(std::vector<keys_e> &events) {
         } else if (key == F4) {
             remove(events.begin(), events.end(), key);
             load_game_lib(get_next_lib(false).c_str());
-        } else if (key == R) { // FIXME: segV
+        } else if (key == R && !_menu._typing) { // FIXME: segV
             remove(events.begin(), events.end(), key);
             load_game_lib(_last_path_game.c_str());
         }
@@ -161,7 +161,7 @@ bool arcade::Core::interpret_events(std::vector<keys_e> &events) {
 bool arcade::Core::do_a_frame()
 {
     std::vector<keys_e> events = _libgr->pollEvent();
-    std::string eventString("menu");
+    std::string eventString(_menu.getGame());
 
     if (!interpret_events(events)) {
         return false;

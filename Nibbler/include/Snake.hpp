@@ -27,7 +27,7 @@ namespace arcade::game
                     _Snake[i].charColor = (!i ? 0xBE8AB088 : 0xBE8AB0FF);
                 }
             };
-            ~Snake();
+            ~Snake() {};
 
             std::size_t _size;
             std::vector<cell_t> _Snake;

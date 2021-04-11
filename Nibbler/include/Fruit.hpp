@@ -26,7 +26,7 @@ namespace arcade::game
                     _apple[i].charColor = RDCOLOR;
                 }
             };
-            ~Fruit();
+            ~Fruit() {};
 
             std::size_t _id;
             std::vector<cell_t> _apple;
