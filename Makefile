@@ -29,16 +29,16 @@ clean: clean_title
 	$(CLEAN_MSG)
 
 graphicals:
-	@make -C ./src/SDL/ --no-print-directory
 	@make -C ./src/SFML/ --no-print-directory
 	@make -C ./src/NCURSES/ --no-print-directory
+	@make -C ./src/SDL/ --no-print-directory
 
 fclean: clean
 	$(RM) $(NAME)
 	@make -C Nibbler/ fclean --no-print-directory
-	@make -C ./src/SDL/ fclean --no-print-directory
 	@make -C ./src/SFML/ fclean --no-print-directory
 	@make -C ./src/NCURSES/ fclean --no-print-directory
+	@make -C ./src/SDL/ fclean --no-print-directory
 	$(FCLEAN_MSG)
 
 re: fclean all
