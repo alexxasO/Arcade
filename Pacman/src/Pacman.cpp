@@ -220,7 +220,6 @@ bool arcade::game::Pacman::move()
         _pacman.position.second < 0 ||
         _pacman.position.first >= BOARD_SIZE ||
         _pacman.position.second >= BOARD_SIZE)
-        return (fprintf(stderr, "Game over\n") && 0);
     return true;
 }
 
