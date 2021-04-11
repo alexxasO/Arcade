@@ -27,6 +27,8 @@ arcade::game::Pacman::~Pacman()
 void arcade::game::Pacman::initBoard()
 {
     _board = _walls._walls;
+    for (auto cell : _board) {
+    }
     setTextOnBoard({1, 1}, "PACMAN");
     setTextOnBoard({12, 1}, "Score : " + std::to_string(_score));
 }
@@ -116,21 +118,25 @@ bool arcade::game::Pacman::setScore(const int &score)
 
 void arcade::game::Pacman::moveHorizontally(int dir)
 {
-    if (_pacman.position.first + dir < 0 ||
-        _pacman.position.second < 0 ||
-        _pacman.position.first + dir >= BOARD_SIZE ||
-        _pacman.position.second >= BOARD_SIZE)
-        return;
+    std::pair<int, int> newPos = _pacman.position;
+
+    newPos.first += dir;
+    for (auto cell : _board) {
+        if (cell.position == newPos && cell.c == 'r')
+            return;
+    }
     _pacman.position.first += dir;
 }
 
 void arcade::game::Pacman::moveVertically(int dir)
 {
-    if (_pacman.position.first < 0 ||
-        _pacman.position.second + dir < 0 ||
-        _pacman.position.first >= BOARD_SIZE ||
-        _pacman.position.second + dir >= BOARD_SIZE)
-        return;
+    std::pair<int, int> newPos = _pacman.position;
+
+    newPos.second += dir;
+    for (auto cell : _board) {
+        if (cell.position == newPos && cell.c == 'r')
+            return;
+    }
     _pacman.position.second += dir;
 }
 

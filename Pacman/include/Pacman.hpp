@@ -16,6 +16,7 @@
 #include "keys.hpp"
 #include "IGameModule.hpp"
 #include "Walls.hpp"
+#include "Food.hpp"
 
 namespace arcade::game
 {
@@ -54,6 +55,7 @@ namespace arcade::game
             cell_t _pacman;
             key_t _key;
             Walls _walls;
+            std::vector<Food> _food;
     };
 }
 
