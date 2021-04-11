@@ -56,6 +56,7 @@ namespace arcade::game
             key_t _key;
             Walls _walls;
             std::vector<Food> _food;
+            bool _smooth;
     };
 }
 

@@ -8,7 +8,7 @@
 #include "Pacman.hpp"
 
 arcade::game::Pacman::Pacman()
-    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP), _food(BOARD_SIZE * BOARD_SIZE)
+    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP), _food(BOARD_SIZE * BOARD_SIZE), _smooth(false)
 {
     _pacman = {
         .c = 'o',
@@ -28,7 +28,13 @@ void arcade::game::Pacman::initBoard()
 {
     _board = _walls._walls;
     for (std::size_t i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
-        // _board[i] = _food[i]._food;
+        if (_board[i].c == ' ' && !_food[i]._picked) {
+            _board[i].c = _food[i]._food.c;
+            _board[i].charColor = _food[i]._food.charColor;
+            _board[i].size = _food[i]._food.size;
+        } else {
+            _food[i]._picked = true;
+        }
     }
     setTextOnBoard({1, 1}, "PACMAN");
     setTextOnBoard({12, 1}, "Score : " + std::to_string(_score));
@@ -36,7 +42,7 @@ void arcade::game::Pacman::initBoard()
 
 void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elapsedTime)
 {
-    float frameRate = 0.2;
+    float frameRate = 0.1;
 
     for (auto it = events.begin(); it != events.end(); it++) {
         if (*it == ARROW_DOWN)
@@ -55,6 +61,10 @@ void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elaps
     }
     if (_timer < frameRate)
         _timer += elapsedTime;
+    // if (_smooth)
+    //     _smooth = false;
+    // else
+    //     _smooth = true;
 }
 
 bool arcade::game::Pacman::checkBody()
@@ -122,11 +132,19 @@ void arcade::game::Pacman::moveHorizontally(int dir)
     std::pair<int, int> newPos = _pacman.position;
 
     newPos.first += dir;
-    for (auto cell : _board) {
-        if (cell.position == newPos && cell.c == 'r')
+    for (std::size_t i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
+        if (_board[i].position == newPos && _board[i].c == 'r')
             return;
+        if (_board[i].position == newPos && _board[i].c == 'o') {
+            _score += 10;
+            _food[i]._picked = true;
+        }
     }
     _pacman.position.first += dir;
+    if (_pacman.position.first < 0)
+        _pacman.position.first = BOARD_SIZE;
+    else if (_pacman.position.first >= BOARD_SIZE)
+        _pacman.position.first = (-1);
 }
 
 void arcade::game::Pacman::moveVertically(int dir)
@@ -134,9 +152,13 @@ void arcade::game::Pacman::moveVertically(int dir)
     std::pair<int, int> newPos = _pacman.position;
 
     newPos.second += dir;
-    for (auto cell : _board) {
-        if (cell.position == newPos && cell.c == 'r')
+    for (std::size_t i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
+        if (_board[i].position == newPos && _board[i].c == 'r')
             return;
+        if (_board[i].position == newPos && _board[i].c == 'o') {
+            _score += 10;
+            _food[i]._picked = true;
+        }
     }
     _pacman.position.second += dir;
 }
