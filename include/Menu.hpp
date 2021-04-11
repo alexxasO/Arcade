@@ -42,13 +42,13 @@ namespace arcade
             const std::vector<cell_t> &getBoard() const;
     		int getScore() const;
             std::string getGame() const;
-            void setGame(const std::string &);
 
             /* Setters */
             bool setBoard(const std::pair<int, int> &, const cell_t &);
     		bool setScore(const int &);
             bool setGameList(const std::deque<std::string> &, const std::deque<std::string> &);
             void setTextOnBoard(std::pair<int, int>, std::string);
+            void setGame(const std::string &);
 
             bool _typing;
         protected:
