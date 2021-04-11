@@ -112,7 +112,7 @@ arcade::display::Ncurses_disp_module::~Ncurses_disp_module()
     endwin();
 }
 
-void arcade::display::Ncurses_disp_module::interpret_cell(const cell_t &cell)
+void arcade::display::Ncurses_disp_module::interpret_solo_cell(const cell_t &cell)
 {
     color_t color{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
@@ -128,7 +128,10 @@ void arcade::display::Ncurses_disp_module::interpret_cell(const cell_t &cell)
     color.pairID = _nextPairID;
 
     if (!cell.plainChar) {
-        _form_map[cell.c](cell, color);
+        if (_form_map[cell.c])
+            _form_map[cell.c](cell, color);
+        else
+            draw_space(cell, color);
     } else {
         draw_char(cell, color);
     }
@@ -139,7 +142,8 @@ void arcade::display::Ncurses_disp_module::interpret_cell(const cell_t &cell)
 void arcade::display::Ncurses_disp_module::interpretCells(const std::vector<cell_t> &cells)
 {
     for (auto & cell : cells) {
-        interpret_cell(cell);
+        fprintf(stderr, "char : %c\n", cell.c);
+        interpret_solo_cell(cell);
     }
 }
 

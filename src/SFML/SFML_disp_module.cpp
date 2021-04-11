@@ -78,7 +78,6 @@ SFML_display_module::SFML_display_module()
     _form_map['v'] = &draw_triangle;
     _form_map['o'] = &draw_circle;
     _form_map[' '] = &draw_rect;
-    std::cout << "SFML ctor" << std::endl;
 }
 
 SFML_display_module::~SFML_display_module()

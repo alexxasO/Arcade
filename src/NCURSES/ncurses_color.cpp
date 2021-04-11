@@ -17,7 +17,6 @@ static int find_nearest_color(int r, int g, int b)
     short blue;
     std::pair<int, int> nearest{-1, -1};
     int diff = 0;
-    // fprintf(stderr, "receiving: ? (%d, %d, %d)\n", r, g, b);
 
     for (short i = 0; i < 8; i++) {
         color_content(i, &red, &green, &blue);
@@ -28,11 +27,9 @@ static int find_nearest_color(int r, int g, int b)
         }
     }
     color_content(nearest.first, &red, &green, &blue);
-    // fprintf(stderr, "returning: %d (%d, %d, %d)\n", nearest.first, red, green, blue);
     return nearest.first;
 }
 
-// TODO: func to find matching pair with given colors
 static int find_pair_arcade(short col1, short col2)
 {
     short one;
@@ -52,8 +49,6 @@ int find_color_pair(const color_t &col)
     int color_ch = find_nearest_color(col.ch_r, col.ch_g, col.ch_b);
     int color_bg = find_nearest_color(col.bg_r, col.bg_g, col.bg_b);
     int pair_to_ret = find_pair_arcade(color_ch, color_bg);
-
-    // fprintf(stderr, "ch: %d, bg: %d, pair: %d\n", color_ch, color_bg, pair_to_ret);
 
     return pair_to_ret;
 }
@@ -134,5 +129,4 @@ void init_pairs_arcade()
     init_pair(i++, COLOR_WHITE, COLOR_MAGENTA);
     init_pair(i++, COLOR_WHITE, COLOR_CYAN);
     init_pair(i++, COLOR_WHITE, COLOR_WHITE);
-    fprintf(stderr, "info : loaded %d colors\n", i);
 }

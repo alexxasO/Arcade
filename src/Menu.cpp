@@ -64,7 +64,6 @@ std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, floa
                 *it == NUM_7 || *it == NUM_8 || *it == NUM_9) {
                 for (auto lst : _gameList) {
                     if ((std::size_t)(*it - 23) == lst.first) {
-                        fprintf(stderr, "game %s has been launched\n", lst.second.c_str());
                         _game = "./lib/arcade_" + lst.second + ".so";
                     }
                 }
@@ -173,7 +172,6 @@ bool arcade::Menu::setGameList(const std::deque<std::string> &gameList,
     }
     idx = {0, 1};
     for (auto lst : graphList) {
-        fprintf(stderr, "%s\n", lst.c_str());
         temp = (lst.c_str() + 13);
         if ((idx.first = temp.find(".so"))) {
             _graphList.push_back(temp.erase(idx.first, 3));

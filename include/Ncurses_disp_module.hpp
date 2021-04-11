@@ -40,7 +40,7 @@ namespace arcade::display {
             void refreshScreen() override;
             std::vector<keys_e> pollEvent() override;
 
-            void interpret_cell(const cell_t &);
+            void interpret_solo_cell(const cell_t &);
 
         protected:
             WINDOW *_main_win;
@@ -62,7 +62,7 @@ namespace arcade::display {
                 {27, ESC},
                 {'\t', TAB},
                 {' ', SPACE},
-                {KEY_ENTER, RETURN},
+                {'\n', RETURN},
                 {KEY_BACKSPACE, BACKSPACE},
                 {127, DEL},
                 {'?', INSERT},
