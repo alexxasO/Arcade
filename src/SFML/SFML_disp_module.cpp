@@ -61,7 +61,7 @@ static void draw_text(const cell_t &cell, sf::RenderWindow &win, sf::Color color
         exit(84);
     }
     text.setFont(font);
-    text.setCharacterSize(TILE_X);
+    text.setCharacterSize(TILE_Y);
     text.setString(std::string(1, cell.c));
     text.setFillColor(color);
     text.setPosition(sf::Vector2f(DELTA_X(cell.position.first), DELTA_Y(cell.position.second)));
