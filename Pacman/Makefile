@@ -1,62 +1,48 @@
-NAME	= arcade
+##
+## EPITECH PROJECT, 2021
+## Makefile
+## File description:
+## compile programs
+##
 
-CC	= g++
+LIBDIR=		../lib/
+INCDIR=		include/
+SRCDIR=		src/
 
-RM	= rm -f
+OBJ=		$(SRC:.cpp=.o)
+SRC=		$(SRCDIR)Pacman.cpp
 
-SRCS	= 	./src/main.cpp			\
-	  		./src/Menu.cpp			\
-	  		./src/Core.cpp			\
+CXXFLAGS=	-I $(INCDIR) -fPIC
 
-OBJS	= $(SRCS:.cpp=.o)
+NAME=		arcade_pacman.so
 
-CXXFLAGS = -I ./include
-CXXFLAGS +=  -Wall -Wextra -std=gnu++17 -Wl,-rpath=.
-LXXFLAGS = -ldl
+##
+## Rules
+##
 
-all: core games graphicals
+all: title $(NAME)
 
-core: title $(NAME)
-
-$(NAME): cc_title obj_title $(OBJS)
-	@$(CC) $(OBJS) -o $(NAME) $(LXXFLAGS) $(LDFLAGS) && $(CHECK_MSG)
-
-games:
-	@make -C Nibbler/ re --no-print-directory
-	@make -C Pacman/ re --no-print-directory
+$(NAME): cc_title obj_title $(OBJ)
+	@$(LD) -shared -o $(NAME) $(OBJ) $(CXXFLAGS) && $(CHECK_MSG)
+	@mv $(NAME) $(LIBDIR)
 
 clean: clean_title
 	@$(RM) $(OBJ)
 	$(CLEAN_MSG)
 
-graphicals:
-	@make -C ./src/SFML/ --no-print-directory
-	@make -C ./src/NCURSES/ --no-print-directory
-	@make -C ./src/SDL/ --no-print-directory
-
-fclean: clean
-	$(RM) $(NAME)
-	@make -C Nibbler/ fclean --no-print-directory
-	@make -C ./src/SFML/ fclean --no-print-directory
-	@make -C ./src/NCURSES/ fclean --no-print-directory
-	@make -C ./src/SDL/ fclean --no-print-directory
+fclean:	clean
+	@$(RM) ../lib/$(NAME)
 	$(FCLEAN_MSG)
 
-re: fclean all
-
+re:	fclean all
 
 debug: CXXFLAGS += -g3
 debug: re
-	@make -C Nibbler/ debug
-	@make -C ./src/SDL/ debug
-	@make -C ./src/SFML/ debug
-	@make -C ./src/NCURSES/ debug
 
 %.o: %.cpp
 	@$(CC) -c $^ -o $@ $(CXXFLAGS) && $(CC_MSG)
 
-.PHONY: all clean fclean re lib core games graphicals
-
+.PHONY: all clean fclean re debug
 
 ##
 ## Messages

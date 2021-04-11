@@ -197,3 +197,8 @@ void arcade::Menu::setTextOnBoard(std::pair<int, int> pos, std::string str)
         }
     }
 }
+
+void arcade::Menu::setGame(const std::string &game)
+{
+    _game = game;
+}

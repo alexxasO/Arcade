@@ -48,6 +48,7 @@ namespace arcade
     		bool setScore(const int &);
             bool setGameList(const std::deque<std::string> &, const std::deque<std::string> &);
             void setTextOnBoard(std::pair<int, int>, std::string);
+            void setGame(const std::string &);
 
             bool _typing;
         protected:

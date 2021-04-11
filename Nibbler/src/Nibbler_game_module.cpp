@@ -29,7 +29,7 @@ void arcade::game::Nibbler_game_module::initBoard()
             _board[move] = newCell;
             _board[move].position = {i, j};
             _board[move].c = ' ';
-            _board[move].charColor = ' ';
+            _board[move].charColor = 0x000000FF;
             if (!i || i == BOARD_SIZE - 1) {
                 _board[move].c = 'r';
                 _board[move].charColor = 0xFF0000FF;
