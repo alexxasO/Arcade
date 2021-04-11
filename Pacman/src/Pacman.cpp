@@ -82,7 +82,7 @@ void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elaps
 bool arcade::game::Pacman::checkBody()
 {
     for (auto &food : _food) {
-        if (food._picked)
+        if (!food._picked)
             return false;
     }
     return true;
