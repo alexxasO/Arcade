@@ -7,3 +7,4 @@ vgcore*
 arcade
 *.log
 ./lib/
+resources/

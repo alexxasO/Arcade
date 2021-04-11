@@ -65,7 +65,7 @@ std::string arcade::Menu::update(const std::vector<arcade::keys_e> &events, floa
                 for (auto lst : _gameList) {
                     if ((std::size_t)(*it - 23) == lst.first) {
                         fprintf(stderr, "game %s has been launched\n", lst.second.c_str());
-                        _game = lst.second.c_str();
+                        _game = "./lib/arcade_" + lst.second + ".so";
                     }
                 }
             }
@@ -118,20 +118,24 @@ void arcade::Menu::reset()
 
 // GETTERS
 
-const std::vector<arcade::cell_t> &arcade::Menu::getBoard()
+const std::vector<arcade::cell_t> &arcade::Menu::getBoard() const
 {
     return _board;
 }
 
-int arcade::Menu::getScore()
+int arcade::Menu::getScore() const
 {
     return _score;
 }
 
-
-std::string arcade::Menu::getGame()
+std::string arcade::Menu::getGame() const
 {
     return _game;
+}
+
+void arcade::Menu::setGame(const std::string &game)
+{
+    _game = game;
 }
 
 // SETTERS

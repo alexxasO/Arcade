@@ -25,7 +25,7 @@ games:
 	@make -C Nibbler/ re --no-print-directory
 
 clean: clean_title
-	@$(RM) $(OBJ)
+	@$(RM) $(OBJS)
 	$(CLEAN_MSG)
 
 graphicals:
