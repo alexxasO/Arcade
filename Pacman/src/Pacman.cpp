@@ -8,12 +8,12 @@
 #include "Pacman.hpp"
 
 arcade::game::Pacman::Pacman()
-    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP)
+    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP), _food(BOARD_SIZE * BOARD_SIZE)
 {
     _pacman = {
         .c = 'o',
-        .charColor = 0x00FF00FF,
-        .position = {BOARD_SIZE / 2, BOARD_SIZE / 2}
+        .charColor = 0xFFFF00FF,
+        .position = {19, 23}
     };
     initBoard();
 }
@@ -27,7 +27,8 @@ arcade::game::Pacman::~Pacman()
 void arcade::game::Pacman::initBoard()
 {
     _board = _walls._walls;
-    for (auto cell : _board) {
+    for (std::size_t i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
+        // _board[i] = _food[i]._food;
     }
     setTextOnBoard({1, 1}, "PACMAN");
     setTextOnBoard({12, 1}, "Score : " + std::to_string(_score));

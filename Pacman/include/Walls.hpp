@@ -23,15 +23,15 @@ namespace arcade::game
             {
                 std::string map[] = {
                     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
-                    "r                                      r",
+                    "raaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaar",
                     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
                     "r                                      r",
                     "r rrr rrrr rrrr rrr rrr  rrrr rrrrrrrr r",
-                    "r r r r  r r    r r rarr r    raaaaaar r",
-                    "r r r r  r r rr r r raar r rr raaaaaar r",
-                    "r r r r  r r rr r r raar r rr raaaaaar r",
-                    "r r r rrrr r rr r r raar r rr raaaaaar r",
-                    "r r r rrr  r rr r r raar r    raaaaaar r",
+                    "r rar raar r    r r rarr r    raaaaaar r",
+                    "r rar raar r rr r r raar r rr raaaaaar r",
+                    "r rar raar r rr r r raar r rr raaaaaar r",
+                    "r rar rrrr r rr r r raar r rr raaaaaar r",
+                    "r rar rrr  r rr r r raar r    raaaaaar r",
                     "r rrr rrrr r rr rrr raar rrr  raaaaaar r",
                     "r r r r  r r rr r r raar r    raaaaaar r",
                     "r r r r  r r rr r r raar r rr raaaaaar r",
@@ -70,7 +70,7 @@ namespace arcade::game
                         _walls[move].position = {i, j};
                         _walls[move].c = map[j][i];
                         if (map[j][i] == 'r')
-                            _walls[move].charColor = 0x0000FFFF;
+                            _walls[move].charColor = 0x00DDDDFF;
                         else
                             _walls[move].charColor = 0x000000FF;
                         move++;
