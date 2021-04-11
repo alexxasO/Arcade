@@ -205,7 +205,7 @@ bool arcade::game::Nibbler_game_module::move()
         _snake._Snake.begin()->position.second < 0 ||
         _snake._Snake.begin()->position.first >= BOARD_SIZE ||
         _snake._Snake.begin()->position.second >= BOARD_SIZE)
-        return (fprintf(stderr, "Game over\n") && 0);
+        return false;
     return true;
 }
 
@@ -225,7 +225,6 @@ void arcade::game::Nibbler_game_module::eat()
         }
     }
     _fruits._apple.begin()->position = pos;
-    fprintf(stderr, "Miam\n");
 }
 
 void arcade::game::Nibbler_game_module::setTextOnBoard(std::pair<int, int> pos, std::string str)

@@ -19,7 +19,7 @@ namespace arcade::game
 {
     class Walls {
         public:
-            Walls()
+            Walls() : _walls(BOARD_SIZE * BOARD_SIZE)
             {
                 std::string map[] = {
                     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
@@ -27,23 +27,23 @@ namespace arcade::game
                     "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",
                     "r                                      r",
                     "r rrr rrrr rrrr rrr rrr  rrrr rrrrrrrr r",
-                    "r r r r  r r    r r r rr r    r      r r",
-                    "r r r r  r r    r r r  r r    r      r r",
-                    "r r r r  r r    r r r  r r    r      r r",
-                    "r r r rrrr r    r r r  r r    r      r r",
-                    "r r r rrr  r    r r r  r r    r      r r",
-                    "r rrr rrrr r    rrr r  r rrr  r      r r",
-                    "r r r r  r r    r r r  r r    r      r r",
-                    "r r r r  r r    r r r  r r    r      r r",
-                    "r r r r  r r    r r r  r r    r      r r",
-                    "r r r r  r r    r r r rr r    r      r r",
+                    "r r r r  r r    r r rarr r    raaaaaar r",
+                    "r r r r  r r rr r r raar r rr raaaaaar r",
+                    "r r r r  r r rr r r raar r rr raaaaaar r",
+                    "r r r rrrr r rr r r raar r rr raaaaaar r",
+                    "r r r rrr  r rr r r raar r    raaaaaar r",
+                    "r rrr rrrr r rr rrr raar rrr  raaaaaar r",
+                    "r r r r  r r rr r r raar r    raaaaaar r",
+                    "r r r r  r r rr r r raar r rr raaaaaar r",
+                    "r r r r  r r rr r r raar r rr raaaaaar r",
+                    "r r r r  r r    r r rarr r    raaaaaar r",
                     "r r r r  r rrrr r r rrr  rrrr rrrrrrrr r",
                     "r                                      r",
-                    "rrrrrrr rrrrrrr rrr rrr rrrrrrrr rrrrrrr",
-                    "                r     r                 ",
-                    "rrrrrrrrrrrrrrr r     r rrrrrrrrrrrrrrrr",
-                    "rrrrrrrrrrrrrrr r     r rrrrrrrrrrrrrrrr",
-                    "                r     r                 ",
+                    "rrrrrrr rrrrrrr rrrarrr rrrrrrrr rrrrrrr",
+                    "                raaaaar                 ",
+                    "rrrrrrrrrrrrrrr raaaaar rrrrrrrrrrrrrrrr",
+                    "rrrrrrrrrrrrrrr raaaaar rrrrrrrrrrrrrrrr",
+                    "                raaaaar                 ",
                     "rrrrrrr rrrrrrr rrrrrrr rrrrrrrr rrrrrrr",
                     "r                                      r",
                     "r rrrrrrrrrrrrr rrrrrrr rrrrrrrrrrrrrr r",
@@ -53,7 +53,7 @@ namespace arcade::game
                     "r r r rrrrr rrrrr rrr rrrrr rrrrrr r r r",
                     "r r r             rrr              r r r",
                     "r r rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr r r",
-                    "r r                                  r r",
+                    "r                                      r",
                     "r rrrrrrrrrrrrrrrrr rrrrrrrrrrrrrrrrrr r",
                     "r                                      r",
                     "r rr rrrrrr rrrrrrrrrrrrrr rrrrrrrr rr r",
@@ -68,8 +68,8 @@ namespace arcade::game
                 for (std::size_t i = 0; i != BOARD_SIZE; i++) {
                     for (std::size_t j = 0; j != BOARD_SIZE; j++) {
                         _walls[move].position = {i, j};
-                        _walls[move].c = map[i][j];
-                        if (map[i][j] == 'r')
+                        _walls[move].c = map[j][i];
+                        if (map[j][i] == 'r')
                             _walls[move].charColor = 0x0000FFFF;
                         else
                             _walls[move].charColor = 0x000000FF;

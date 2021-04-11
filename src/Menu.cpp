@@ -133,11 +133,6 @@ std::string arcade::Menu::getGame() const
     return _game;
 }
 
-void arcade::Menu::setGame(const std::string &game)
-{
-    _game = game;
-}
-
 // SETTERS
 
 bool arcade::Menu::setBoard(const std::pair<int, int> &pos, const cell_t &cell)

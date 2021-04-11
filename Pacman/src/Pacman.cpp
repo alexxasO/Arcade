@@ -10,7 +10,6 @@
 arcade::game::Pacman::Pacman()
     : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP)
 {
-    fprintf(stderr, "test0\n");
     _pacman = {
         .c = 'o',
         .charColor = 0x00FF00FF,
@@ -27,16 +26,14 @@ arcade::game::Pacman::~Pacman()
 
 void arcade::game::Pacman::initBoard()
 {
-    fprintf(stderr, "test1\n");
     _board = _walls._walls;
-    fprintf(stderr, "test2\n");
     setTextOnBoard({1, 1}, "PACMAN");
     setTextOnBoard({12, 1}, "Score : " + std::to_string(_score));
 }
 
 void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elapsedTime)
 {
-    float frameRate = 0.1;
+    float frameRate = 0.2;
 
     for (auto it = events.begin(); it != events.end(); it++) {
         if (*it == ARROW_DOWN)
