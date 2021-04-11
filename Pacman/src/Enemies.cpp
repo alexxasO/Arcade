@@ -74,7 +74,7 @@ bool arcade::game::Enemies::move(const std::vector<cell_t> &board)
 {
     int rd = rand() % 4;
 
-    fprintf(stderr, "%f\n", _timer);
+    // fprintf(stderr, "%f\n", _timer);
     if (_timer <= 10)
         return false;
     if (_key == ARROW_DOWN)

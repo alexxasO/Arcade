@@ -81,7 +81,11 @@ void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elaps
 
 bool arcade::game::Pacman::checkBody()
 {
-    return false;
+    for (auto &food : _food) {
+        if (food._picked)
+            return false;
+    }
+    return true;
 }
 
 void arcade::game::Pacman::refreshBoard()
@@ -96,13 +100,31 @@ void arcade::game::Pacman::refreshBoard()
             }
         }
     }
-    // checkBody();
+    if (checkBody())
+        reset();
 }
 
 void arcade::game::Pacman::reset()
 {
     std::vector<cell_t> newBoard(BOARD_SIZE * BOARD_SIZE);
+    Enemies en1(0);
+    Enemies en2(1);
+    Enemies en3(2);
+    Enemies en4(3);
+    std::vector<Enemies> enemies;
+    std::vector<Food> food(BOARD_SIZE * BOARD_SIZE);
 
+    enemies.push_back(en1);
+    enemies.push_back(en2);
+    enemies.push_back(en3);
+    enemies.push_back(en4);
+    _enemies = enemies;
+    _pacman = {
+        .c = 'o',
+        .charColor = 0xFFFF00FF,
+        .position = {19, 23}
+    };
+    _food = food;
     _score = 0;
     _board = newBoard;
     initBoard();
@@ -153,8 +175,12 @@ void arcade::game::Pacman::moveHorizontally(int dir)
         if (_board[i].position == newPos && _board[i].c == 'r')
             return;
         if (_board[i].position == newPos && _board[i].c == 'o') {
-            _score += 10;
-            _food[i]._picked = true;
+            if (_board[i].size == 1.0) {
+                reset();
+            } else {
+                _score += 10;
+                _food[i]._picked = true;
+            }
         }
     }
     _pacman.position.first += dir;

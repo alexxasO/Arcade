@@ -69,6 +69,11 @@ namespace arcade::game
                     for (std::size_t j = 0; j != BOARD_SIZE; j++) {
                         _walls[move].position = {i, j};
                         _walls[move].c = map[j][i];
+                        if (map[j][i] == 'a') {
+                            _walls[move].charColor = 0x000000FF;
+                            _walls[move].bgColor = 0x000000FF;
+                            _walls[move].plainChar = true;
+                        }
                         if (map[j][i] == 'r')
                             _walls[move].charColor = 0x00DDDDFF;
                         else
