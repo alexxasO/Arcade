@@ -29,7 +29,7 @@ namespace arcade
         uint bgColor{0x000000FF};                   // RGBA
         uint charColor{0xFFFFFFFF};                 // RGBA
         float direction{0.0f};                      // degrees
-        // float size{1.0f};                           // size
+        float size{1.0f};                           // size
         std::pair<int, int> position{0, 0};         // <x, y>
         std::pair<float, float> offset{0.5f, 0.5f}; // <x, y>
         std::string imagePath{};                    // data for image
