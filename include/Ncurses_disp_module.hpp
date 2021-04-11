@@ -62,7 +62,7 @@ namespace arcade::display {
                 {27, ESC},
                 {'\t', TAB},
                 {' ', SPACE},
-                {KEY_ENTER, RETURN},
+                {'\n', RETURN},
                 {KEY_BACKSPACE, BACKSPACE},
                 {127, DEL},
                 {'?', INSERT},
