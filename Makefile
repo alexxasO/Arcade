@@ -17,7 +17,7 @@ LXXFLAGS = -ldl
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) lib
 	$(CC) $(OBJS) -o $(NAME) $(LXXFLAGS) $(LDFLAGS)
 
 nibbler:

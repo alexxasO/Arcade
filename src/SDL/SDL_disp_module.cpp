@@ -72,25 +72,22 @@ static void draw_circle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color c
     }
 }
 
-static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+void SDL_display_module::draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
-    TTF_Font *text = TTF_OpenFont("./assets/font/consolab.ttf", TILE_X);
-    if (!text) {
-        printf("ca a merde qql part %s\n", TTF_GetError());
-        exit(84);
-    }
-    draw_rect(cell.position, render, color_bg, SDL_Color());
     std::string mess(1, cell.c);
     SDL_Color White = {color.r, color.g, color.b, color.a};
-    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(text, mess.c_str(), White);
+    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(_font, mess.c_str(), White);
     SDL_Texture *Message = SDL_CreateTextureFromSurface(render, surfaceMessage);
     SDL_Rect Message_rect;
 
+    draw_rect(cell.position, render, color_bg, SDL_Color());
     Message_rect.x = DELTA_X(cell.position.first);
     Message_rect.y = DELTA_Y(cell.position.second);
-    Message_rect.h = TILE_X;
-    Message_rect.w = TILE_Y;
+    Message_rect.h = TILE_Y;
+    Message_rect.w = TILE_X;
     SDL_RenderCopy(render, Message, nullptr, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
 }
 
 SDL_display_module::SDL_display_module()
@@ -104,6 +101,11 @@ SDL_display_module::SDL_display_module()
     if (TTF_Init() == -1) {
         printf("%s", TTF_GetError());
 
+    }
+    _font = TTF_OpenFont("./assets/font/consolab.ttf", TILE_Y);
+    if (!_font) {
+        printf("ca a merde qql part %s\n", TTF_GetError());
+        exit(84);
     }
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;

@@ -101,8 +101,6 @@ void SFML_display_module::interpretSoloCell(const cell_t& cell)
         _form_map.at(cell.c)(cell.position, cell.offset, _win, color);
     } catch (const std::out_of_range& e){
     }
-
-
 }
 
 void SFML_display_module::interpretCells(const std::vector<cell_t> &cells)
