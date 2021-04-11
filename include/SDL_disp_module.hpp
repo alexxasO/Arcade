@@ -15,7 +15,7 @@
 #include <string>
 #include <iostream>
 
-typedef void (*draw_form_sdl)(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
+typedef void (*draw_form_sdl)(const arcade::cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
 #define TILE_X 10
 #define TILE_Y 21
 #define DELTA_X(x) ((x) * TILE_X)
@@ -43,11 +43,14 @@ public:
 
     void refreshScreen() override;
 
+    void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
+
 protected:
     std::vector<keys_e> _event;
     std::map<char, draw_form_sdl> _form_map;
     SDL_Window *_win;
     SDL_Renderer *_render;
+    TTF_Font *_font;
     std::map<SDL_Keycode, keys_e> _key_map = {
             {SDLK_LCTRL,        CTRL},
             {SDLK_LSHIFT,       SHIFT_L},

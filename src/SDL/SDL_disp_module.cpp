@@ -10,20 +10,24 @@
 using namespace arcade::display;
 using namespace arcade;
 
-static void draw_line(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+static void draw_line(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
+    (void)cell;
+    (void)render;
+    (void)color;
+    (void)color_bg;
     //TODO: Draw line
 //    SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
 //    SDL_RenderDrawLine(render, DELTA_X(x.first), DELTA_Y(x.second), DELTA_X(y.first), DELTA_Y(y.second));
 }
 
-static void draw_rect(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+static void draw_rect(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     SDL_Rect rect1;
 
     (void)color_bg;
-    rect1.x = DELTA_X(x.first);
-    rect1.y = DELTA_Y(x.second);
+    rect1.x = DELTA_X(cell.position.first);
+    rect1.y = DELTA_Y(cell.position.second);
     rect1.h = TILE_Y;
     rect1.w = TILE_X;
 
@@ -31,33 +35,32 @@ static void draw_rect(std::pair<int, int> x, SDL_Renderer *render, SDL_Color col
     SDL_RenderFillRect(render, &rect1);
 }
 
-static void draw_triangle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+static void draw_triangle(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
-    (void)x;
-    (void)render;
-    (void)color;
+    draw_rect(cell, render, color, color_bg);
     //TODO: Implement triangle in SLD2
 }
 
-static void draw_circle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+static void draw_circle(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
     int offset_x;
     int offset_y;
     int d;
 
     offset_x = 0;
-    offset_y = TILE_X / 2;
+    offset_y = (TILE_X / 2) * cell.size;
     d = offset_y - 1;
+    draw_rect(cell, render, color_bg, color);
     SDL_SetRenderDrawColor(render, color.r, color.g, color.b, color.a);
     while (offset_y >= offset_x) {
-        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_y, (DELTA_Y(x.second)+ TILE_Y / 2) + offset_x,
-                           (DELTA_X(x.first) + TILE_X / 2) + offset_y, (DELTA_Y(x.second) + TILE_Y / 2) + offset_x);
-        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_x, (DELTA_Y(x.second) + TILE_Y / 2) + offset_y,
-                           (DELTA_X(x.first) + TILE_X / 2) + offset_x, (DELTA_Y(x.second) + TILE_Y / 2) + offset_y);
-        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_x, (DELTA_Y(x.second) + TILE_Y / 2) - offset_y,
-                           (DELTA_X(x.first) + TILE_X / 2) + offset_x, (DELTA_Y(x.second) + TILE_Y / 2) - offset_y);
-        SDL_RenderDrawLine(render, (DELTA_X(x.first) + TILE_X / 2) - offset_y, (DELTA_Y(x.second) + TILE_Y / 2) - offset_x,
-                           (DELTA_X(x.first) + TILE_X / 2) + offset_y, (DELTA_Y(x.second) + TILE_Y / 2) - offset_x);
+        SDL_RenderDrawLine(render, (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) - offset_y, (DELTA_Y((cell.position.second + cell.offset.second - 0.5))+ TILE_Y / 2) + offset_x,
+                           (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) + offset_y, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) + offset_x);
+        SDL_RenderDrawLine(render, (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) - offset_x, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) + offset_y,
+                           (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) + offset_x, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) + offset_y);
+        SDL_RenderDrawLine(render, (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) - offset_x, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) - offset_y,
+                           (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) + offset_x, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) - offset_y);
+        SDL_RenderDrawLine(render, (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) - offset_y, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) - offset_x,
+                           (DELTA_X((cell.position.first + cell.offset.first - 0.5)) + TILE_X / 2) + offset_y, (DELTA_Y((cell.position.second + cell.offset.second - 0.5)) + TILE_Y / 2) - offset_x);
         if (d >= 2 * offset_x) {
             d -= 2 * offset_x + 1;
             offset_x += 1;
@@ -72,25 +75,22 @@ static void draw_circle(std::pair<int, int> x, SDL_Renderer *render, SDL_Color c
     }
 }
 
-static void draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
+void SDL_display_module::draw_text(const cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg)
 {
-    TTF_Font *text = TTF_OpenFont("./assets/font/consolab.ttf", TILE_X);
-    if (!text) {
-        printf("ca a merde qql part %s\n", TTF_GetError());
-        exit(84);
-    }
-    draw_rect(cell.position, render, color_bg, SDL_Color());
     std::string mess(1, cell.c);
     SDL_Color White = {color.r, color.g, color.b, color.a};
-    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(text, mess.c_str(), White);
+    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(_font, mess.c_str(), White);
     SDL_Texture *Message = SDL_CreateTextureFromSurface(render, surfaceMessage);
     SDL_Rect Message_rect;
 
+    draw_rect(cell, render, color_bg, SDL_Color());
     Message_rect.x = DELTA_X(cell.position.first);
     Message_rect.y = DELTA_Y(cell.position.second);
-    Message_rect.h = TILE_X;
-    Message_rect.w = TILE_Y;
+    Message_rect.h = TILE_Y;
+    Message_rect.w = TILE_X;
     SDL_RenderCopy(render, Message, nullptr, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
 }
 
 SDL_display_module::SDL_display_module()
@@ -104,6 +104,11 @@ SDL_display_module::SDL_display_module()
     if (TTF_Init() == -1) {
         printf("%s", TTF_GetError());
 
+    }
+    _font = TTF_OpenFont("./assets/font/consolab.ttf", TILE_Y);
+    if (!_font) {
+        printf("ca a merde qql part %s\n", TTF_GetError());
+        exit(84);
     }
     _form_map['r'] = &draw_rect;
     _form_map['l'] = &draw_line;
@@ -140,11 +145,11 @@ void SDL_display_module::interpretSoloCell(const cell_t& cell)
         return;
     }
     if (cell.c == ' ') {
-        _form_map.at(cell.c)(cell.position, _render, color_bg, color);
+        _form_map.at(cell.c)(cell, _render, color_bg, color);
         return;
     }
     try {
-        _form_map.at(cell.c)(cell.position, _render, color, color_bg);
+        _form_map.at(cell.c)(cell, _render, color, color_bg);
     }
     catch (const std::out_of_range& e){}
 }

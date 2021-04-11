@@ -110,9 +110,9 @@ void arcade::Core::load_graph_lib(const char *path)
     }
     _graph_lib = dlopen(path, RTLD_LAZY);
     if (!_graph_lib)
-        throw std::runtime_error("Display Module : failed to load lib : " + std::string(path) + "\n");
+        throw std::runtime_error("Display Module : failed to load lib : " + std::string(path) + "\n" + "error :" + dlerror() + "\n");
     if ((_graph = (std::unique_ptr<arcade::display::IDisplayModule> (*)())dlsym(_graph_lib, "entry_point")) == NULL)
-        throw std::runtime_error("Display Module : failed to load symbol\n");
+        throw std::runtime_error((std::string)"Display Module : failed to load symbol\nerror :" + dlerror() + "\n");
     _libgr = _graph();
 }
 
@@ -127,9 +127,9 @@ void arcade::Core::load_game_lib(const char *path)
     }
     _game_lib = dlopen(path, RTLD_LAZY);
     if (!_game_lib)
-        throw std::runtime_error("Game Module : failed to load lib : " + std::string(path) + "\n");
+        throw std::runtime_error("Game Module : failed to load lib : " + std::string(path) + "\n" + "error :" + dlerror() + "\n");
     if ((_game = (std::unique_ptr<arcade::game::IGameModule> (*)())dlsym(_game_lib, "entry_point")) == NULL)
-        throw std::runtime_error("Game Module : failed to load symbol\n");
+        throw std::runtime_error((std::string)"Game Module : failed to load symbol\nerror :" + dlerror() + "\n");
     _libgm = _game();
 }
 
@@ -150,9 +150,12 @@ bool arcade::Core::interpret_events(std::vector<keys_e> &events) {
         } else if (key == F4) {
             remove(events.begin(), events.end(), key);
             load_game_lib(get_next_lib(false).c_str());
-        } else if (key == R && !_menu._typing) { // FIXME: segV
+        } else if (key == R && !_menu._typing) {
             remove(events.begin(), events.end(), key);
             load_game_lib(_last_path_game.c_str());
+        } else if (key == X && !_menu._typing) {
+            remove(events.begin(), events.end(), key);
+            _menu.setGame("menu");
         }
     }
     return true;
@@ -171,6 +174,8 @@ bool arcade::Core::do_a_frame()
     if (eventString == "menu") {
         eventString = _menu.update(events, _elapsed_time.count(), _score);
         _libgr->interpretCells(_menu.getBoard());
+        if (eventString != "menu")
+            load_game_lib(eventString.c_str());
     } else {
         _score = _libgm->getScore();
         _libgm->update(events, _elapsed_time.count());

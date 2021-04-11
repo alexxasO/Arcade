@@ -39,9 +39,10 @@ namespace arcade
             void initBoard();
 
             /* Getters */
-            const std::vector<cell_t> &getBoard();
-    		int getScore();
-            std::string getGame();
+            const std::vector<cell_t> &getBoard() const;
+    		int getScore() const;
+            std::string getGame() const;
+            void setGame(const std::string &);
 
             /* Setters */
             bool setBoard(const std::pair<int, int> &, const cell_t &);
