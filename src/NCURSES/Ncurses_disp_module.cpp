@@ -10,8 +10,7 @@
 
 static void place_char(char c, int x, int y, color_t &color)
 {
-    // int col = find_color_pair(color);
-    int col = -1;
+    int col = find_color_pair(color);
     if (col < 0) {
         mvaddch(y, x, c);
         return;
