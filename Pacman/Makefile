@@ -10,7 +10,8 @@ INCDIR=		include/
 SRCDIR=		src/
 
 OBJ=		$(SRC:.cpp=.o)
-SRC=		$(SRCDIR)Pacman.cpp
+SRC=		$(SRCDIR)Pacman.cpp	\
+			$(SRCDIR)Enemies.cpp
 
 CXXFLAGS=	-I $(INCDIR) -fPIC
 

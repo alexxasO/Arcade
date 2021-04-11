@@ -8,8 +8,19 @@
 #include "Pacman.hpp"
 
 arcade::game::Pacman::Pacman()
-    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0), _key(ARROW_UP), _food(BOARD_SIZE * BOARD_SIZE), _smooth(false)
+    : _board(BOARD_SIZE * BOARD_SIZE), _score(0), _timer(0),
+    _key(ARROW_UP), _food(BOARD_SIZE * BOARD_SIZE),
+    _smooth(false)
 {
+    Enemies en1(0);
+    Enemies en2(1);
+    Enemies en3(2);
+    Enemies en4(3);
+
+    _enemies.push_back(en1);
+    _enemies.push_back(en2);
+    _enemies.push_back(en3);
+    _enemies.push_back(en4);
     _pacman = {
         .c = 'o',
         .charColor = 0xFFFF00FF,
@@ -54,17 +65,18 @@ void arcade::game::Pacman::update(const std::vector<keys_e> &events, float elaps
         else if (*it == ARROW_RIGHT)
             _key = *it;
     }
+    for (auto &en : _enemies) {
+        en.setTimer(elapsedTime);
+    }
     while (_timer >= frameRate) {
+        for (auto &en : _enemies)
+            en.move(_board);
         move();
         refreshBoard();
         _timer -= frameRate;
     }
     if (_timer < frameRate)
         _timer += elapsedTime;
-    // if (_smooth)
-    //     _smooth = false;
-    // else
-    //     _smooth = true;
 }
 
 bool arcade::game::Pacman::checkBody()
@@ -78,8 +90,13 @@ void arcade::game::Pacman::refreshBoard()
     for (auto &cell : _board) {
         if (_pacman.position == cell.position)
             cell = _pacman;
+        for (auto en : _enemies) {
+            if (en._enemy.position == cell.position) {
+                cell = en._enemy;
+            }
+        }
     }
-    checkBody();
+    // checkBody();
 }
 
 void arcade::game::Pacman::reset()

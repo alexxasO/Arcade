@@ -17,6 +17,7 @@
 #include "IGameModule.hpp"
 #include "Walls.hpp"
 #include "Food.hpp"
+#include "Enemies.hpp"
 
 namespace arcade::game
 {
@@ -57,6 +58,7 @@ namespace arcade::game
             Walls _walls;
             std::vector<Food> _food;
             bool _smooth;
+            std::vector<Enemies> _enemies;
     };
 }
 
