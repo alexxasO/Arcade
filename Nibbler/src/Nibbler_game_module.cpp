@@ -67,6 +67,19 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
         _timer += elapsedTime;
 }
 
+bool arcade::game::Nibbler_game_module::checkBody()
+{
+    for (auto it = _snake._Snake.begin(); it != _snake._Snake.end(); it++) {
+        for (auto jt = _snake._Snake.begin(); jt != _snake._Snake.end(); jt++) {
+            if (it != jt && it->position == jt->position) {
+                reset();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void arcade::game::Nibbler_game_module::refreshBoard()
 {
     initBoard();
@@ -82,8 +95,8 @@ void arcade::game::Nibbler_game_module::refreshBoard()
                 eat();
             }
             if (cell.c == 'r') {
-                // reset();
-                // return;
+                reset();
+                return;
             }
         }
         for (auto &snake : _snake._Snake) {
@@ -93,6 +106,7 @@ void arcade::game::Nibbler_game_module::refreshBoard()
             }
         }
     }
+    checkBody();
 }
 
 void arcade::game::Nibbler_game_module::reset()

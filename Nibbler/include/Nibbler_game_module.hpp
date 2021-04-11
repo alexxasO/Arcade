@@ -36,6 +36,7 @@ namespace arcade::game
             void moveVertically(int dir);
             bool move();
             void eat();
+            bool checkBody();
 
             /* Getters */
             const std::vector<cell_t> &getBoard() const;
