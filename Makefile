@@ -46,7 +46,6 @@ re: fclean all
 
 debug: CXXFLAGS += -g3
 debug: re
-	@make -C Nibbler/ debug
 	@make -C ./src/SDL/ debug
 	@make -C ./src/SFML/ debug
 	@make -C ./src/NCURSES/ debug

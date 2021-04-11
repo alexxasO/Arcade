@@ -13,7 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-typedef void (*draw_form)(std::pair<int, int> x, std::pair<int, int> y, sf::RenderWindow &win, sf::Color color);
+typedef void (*draw_form)(const arcade::cell_t &cell, sf::RenderWindow &win, sf::Color color, sf::Color color_bg);
 #define TILE_X 10
 #define TILE_Y 21
 #define DELTA_X(x) ((x) * TILE_X)

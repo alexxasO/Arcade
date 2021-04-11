@@ -15,7 +15,7 @@
 #include <string>
 #include <iostream>
 
-typedef void (*draw_form_sdl)(std::pair<int, int> x, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
+typedef void (*draw_form_sdl)(const arcade::cell_t &cell, SDL_Renderer *render, SDL_Color color, SDL_Color color_bg);
 #define TILE_X 10
 #define TILE_Y 21
 #define DELTA_X(x) ((x) * TILE_X)
