@@ -117,7 +117,6 @@ SDL_display_module::SDL_display_module()
     _form_map[' '] = &draw_rect;
     createWindow("Arcade", 0);
     createRender(SDL_RENDERER_ACCELERATED);
-    std::cout << "SFML ctor" << std::endl;
 }
 
 SDL_display_module::~SDL_display_module()

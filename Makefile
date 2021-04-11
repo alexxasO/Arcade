@@ -40,6 +40,7 @@ fclean: clean
 	@make -C ./src/SFML/ fclean --no-print-directory
 	@make -C ./src/NCURSES/ fclean --no-print-directory
 	@make -C ./src/SDL/ fclean --no-print-directory
+	@make -C Pacman/ fclean --no-print-directory
 	$(FCLEAN_MSG)
 
 re: fclean all
