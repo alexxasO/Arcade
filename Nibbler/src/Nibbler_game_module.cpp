@@ -34,13 +34,15 @@ void arcade::game::Nibbler_game_module::initBoard()
                 _board[move].c = 'r';
                 _board[move].charColor = 0xFF0000FF;
             }
-            if (!j || j == BOARD_SIZE - 1) {
+            if (!j || j == BOARD_SIZE - 1 || j == 2) {
                 _board[move].c = 'r';
                 _board[move].charColor = 0xFF0000FF;
             }
             move++;
         }
     }
+    setTextOnBoard({1, 1}, "NIBBLER");
+    setTextOnBoard({12, 1}, "Score : " + std::to_string(_score));
 }
 
 void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events, float elapsedTime)
@@ -67,6 +69,19 @@ void arcade::game::Nibbler_game_module::update(const std::vector<keys_e> &events
         _timer += elapsedTime;
 }
 
+bool arcade::game::Nibbler_game_module::checkBody()
+{
+    for (auto it = _snake._Snake.begin(); it != _snake._Snake.end(); it++) {
+        for (auto jt = _snake._Snake.begin(); jt != _snake._Snake.end(); jt++) {
+            if (it != jt && it->position == jt->position) {
+                reset();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void arcade::game::Nibbler_game_module::refreshBoard()
 {
     initBoard();
@@ -82,8 +97,8 @@ void arcade::game::Nibbler_game_module::refreshBoard()
                 eat();
             }
             if (cell.c == 'r') {
-                // reset();
-                // return;
+                reset();
+                return;
             }
         }
         for (auto &snake : _snake._Snake) {
@@ -93,6 +108,7 @@ void arcade::game::Nibbler_game_module::refreshBoard()
             }
         }
     }
+    checkBody();
 }
 
 void arcade::game::Nibbler_game_module::reset()
@@ -135,7 +151,7 @@ bool arcade::game::Nibbler_game_module::setBoard(const std::pair<int, int> &pos,
 
 bool arcade::game::Nibbler_game_module::setScore(const int &score)
 {
-    if (_score - score < 0) {
+    if (_score + score < 0) {
         _score = 0;
         return false;
     }
@@ -199,10 +215,10 @@ void arcade::game::Nibbler_game_module::eat()
     bool found = false;
 
     _snake._size++;
-    setScore(_fruits._score);
+    setScore(20);
     _snake._Snake.push_back(_lastPos);
     while (!found) {
-        pos = {BLIM, BLIM};
+        pos = {BLIMX, BLIMY};
         for (auto cell : _board) {
             if (cell.position == pos && cell.c == ' ')
                 found = true;
@@ -211,6 +227,21 @@ void arcade::game::Nibbler_game_module::eat()
     _fruits._apple.begin()->position = pos;
     fprintf(stderr, "Miam\n");
 }
+
+void arcade::game::Nibbler_game_module::setTextOnBoard(std::pair<int, int> pos, std::string str)
+{
+    for (std::size_t i = 0; i < str.length(); i++) {
+        for (auto &cell : _board) {
+            if (cell.position.first == (pos.first + (int)i) &&
+                cell.position.second == pos.second) {
+                cell.c = str[i];
+                cell.charColor = 0xFFFFFFFF;
+                cell.plainChar = true;
+            }
+        }
+    }
+}
+
 
 extern "C" {
 	std::unique_ptr<arcade::game::IGameModule> entry_point()

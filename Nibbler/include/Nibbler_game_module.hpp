@@ -9,7 +9,8 @@
 #define Nibbler_game_module_h
 
 #define BOARD_SIZE 40
-#define BLIM       (rand() % (BOARD_SIZE - 2) + 1)
+#define BLIMX       (rand() % (BOARD_SIZE - 2) + 1)
+#define BLIMY       (rand() % (BOARD_SIZE - 5) + 4)
 
 #include <vector>
 #include <memory>
@@ -26,16 +27,18 @@ namespace arcade::game
             ~Nibbler_game_module();
 
             /* Member functions */
-            void update(const std::vector<keys_e> &events, float elapsedTime);
+            void update(const std::vector<keys_e> &, float);
             void refreshBoard();
             void reset();
             void initBoard();
+            void setTextOnBoard(std::pair<int, int>, std::string);
 
             /* Gameplay */
-            void moveHorizontally(int dir);
-            void moveVertically(int dir);
+            void moveHorizontally(int);
+            void moveVertically(int);
             bool move();
             void eat();
+            bool checkBody();
 
             /* Getters */
             const std::vector<cell_t> &getBoard() const;
