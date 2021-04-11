@@ -9,6 +9,7 @@
 #define Nibbler_game_module_h
 
 #define BOARD_SIZE 40
+#define BLIM       (rand() % (BOARD_SIZE - 2) + 1)
 
 #include <vector>
 #include <memory>
@@ -28,6 +29,7 @@ namespace arcade::game
             void update(const std::vector<keys_e> &events, float elapsedTime);
             void refreshBoard();
             void reset();
+            void initBoard();
 
             /* Gameplay */
             void moveHorizontally(int dir);
