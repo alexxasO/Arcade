@@ -5,12 +5,12 @@
 ** Ncurses_disp_module
 */
 
-#include "Ncurses_disp_module.hpp"
 #include "tools.hpp"
-#include <memory>
+#include "Ncurses_disp_module.hpp"
 
 static void place_char(char c, int x, int y, color_t &color)
 {
+    // int col = find_color_pair(color);
     int col = -1;
     if (col < 0) {
         mvaddch(y, x, c);
@@ -83,6 +83,7 @@ arcade::display::Ncurses_disp_module::Ncurses_disp_module()
         exit(1);
     }
     start_color();
+    init_pairs_arcade();
     nodelay(_main_win, TRUE);
     if (!_main_win)
         fprintf(stderr, "ncurses initscr error\n");
@@ -112,9 +113,9 @@ arcade::display::Ncurses_disp_module::~Ncurses_disp_module()
     endwin();
 }
 
-void arcade::display::Ncurses_disp_module::interpret_cell(const arcade::cell_t &cell)
+void arcade::display::Ncurses_disp_module::interpret_cell(const cell_t &cell)
 {
-    color_t color = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    color_t color{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     color.bg_a = GETALPHA(cell.bgColor) * 1000 / 255;
     color.ch_a = GETALPHA(cell.charColor) * 1000 / 255;
@@ -164,22 +165,6 @@ std::vector<arcade::keys_e> arcade::display::Ncurses_disp_module::pollEvent()
 
     return vec;
 }
-
-// std::vector<keys_e> SFML_display_module::pollEvent()
-// {
-//     sf::Event ev{};
-
-//     _event.clear();
-//     while (_win.pollEvent(ev)) {
-//         if (ev.type == sf::Event::Closed)
-//                 _win.close();
-//         if (ev.type == sf::Event::KeyPressed) {
-//             if (_key_map[ev.key.code])
-//                 _event.push_back(_key_map[ev.key.code]);
-//         }
-//     }
-//     return _event;
-// }
 
 extern "C" {
     std::unique_ptr<arcade::display::IDisplayModule> entry_point()
